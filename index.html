@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thursday Night Men's League — Spencer CC</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%231a3a1a'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='40'>⛳</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --green: #1a3a1a;
+    --green-mid: #2d5a27;
+    --green-light: #4a8c40;
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --cream: #f5f0e8;
+    --white: #fefefe;
+    --dark: #0e1f0e;
+    --text: #2a2a2a;
+    --muted: #7a8c7a;
+    --red: #b84040;
+    --green-score: #5ec95e;
+    --red-score: #e07070;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(42, 90, 39, 0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(20, 50, 20, 0.4) 0%, transparent 50%),
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.01) 2px, rgba(255,255,255,0.01) 4px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── Header ── */
+  header {
+    padding: 48px 0 32px;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+    margin-bottom: 40px;
+  }
+
+  .league-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 80px);
+    letter-spacing: 3px;
+    line-height: 0.9;
+    color: var(--white);
+  }
+  h1 span { color: var(--gold); }
+
+  .header-sub {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 0;
+  }
+
+  .tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--white); }
+  .tab.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Upload & Search ── */
+  .upload-section {
+    margin-bottom: 24px;
+    padding: 20px;
+    border: 2px dashed rgba(201, 168, 76, 0.25);
+    border-radius: 6px;
+    text-align: center;
+  }
+  .upload-section p { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  input[type="file"] { display: none; }
+  .btn-upload {
+    display: inline-block;
+    background: transparent;
+    border: 1px solid rgba(201, 168, 76, 0.4);
+    color: var(--gold);
+    padding: 8px 20px;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-upload:hover { background: rgba(201, 168, 76, 0.1); }
+
+  .search-section { margin-bottom: 40px; }
+  .search-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: block;
+  }
+  .search-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  input[type="text"] {
+    flex: 1;
+    min-width: 240px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201, 168, 76, 0.3);
+    border-radius: 4px;
+    padding: 14px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  input[type="text"]:focus {
+    border-color: var(--gold);
+    background: rgba(255,255,255,0.08);
+  }
+  input[type="text"]::placeholder { color: var(--muted); }
+
+  .btn {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 14px 32px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn:hover { background: var(--gold-light); }
+  .btn:active { transform: scale(0.98); }
+
+  .btn-demo {
+    background: transparent;
+    border: 1px solid rgba(201, 168, 76, 0.4);
+    color: var(--gold);
+    padding: 14px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-demo:hover { background: rgba(201, 168, 76, 0.1); border-color: var(--gold); }
+
+  /* ── Status ── */
+  #status {
+    margin-bottom: 24px;
+    padding: 14px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    display: none;
+  }
+  #status.loading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(201, 168, 76, 0.1);
+    border: 1px solid rgba(201, 168, 76, 0.3);
+    color: var(--gold-light);
+  }
+  #status.error {
+    display: block;
+    background: rgba(184, 64, 64, 0.15);
+    border: 1px solid rgba(184, 64, 64, 0.4);
+    color: #e88080;
+  }
+
+  /* ── Player Card ── */
+  #player-card { display: none; margin-bottom: 40px; }
+
+  .player-header {
+    background: linear-gradient(135deg, var(--green-mid), var(--green));
+    border: 1px solid rgba(201, 168, 76, 0.4);
+    border-radius: 8px 8px 0 0;
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .player-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    letter-spacing: 2px;
+    color: var(--white);
+  }
+  .player-meta {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Stat Chips ── */
+  .stat-chips {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    text-align: center;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(201, 168, 76, 0.3);
+    border-radius: 6px;
+    padding: 10px 18px;
+  }
+  .chip-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .chip-val.good { color: var(--green-score); }
+  .chip-val.bad  { color: var(--red-score); }
+  .chip-lbl {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  /* ── Body panels below header ── */
+  .card-body {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+  }
+
+  /* Scroll wrapper for tables on small screens */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* ── Chart row ── */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  @media (max-width: 700px) {
+    .charts-row { grid-template-columns: 1fr; }
+  }
+
+  .chart-panel {
+    padding: 24px 28px;
+  }
+  .chart-panel + .chart-panel {
+    border-left: 1px solid rgba(255,255,255,0.07);
+  }
+  .chart-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .chart-container { position: relative; }
+
+  /* ── Insight row ── */
+  .insights-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  @media (max-width: 700px) {
+    .insights-row { grid-template-columns: repeat(2, 1fr); }
+  }
+  .insight-cell {
+    padding: 18px 20px;
+    border-right: 1px solid rgba(255,255,255,0.07);
+    text-align: center;
+  }
+  .insight-cell:last-child { border-right: none; }
+  .insight-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--white);
+    line-height: 1;
+  }
+  .insight-val.gold { color: var(--gold); }
+  .insight-val.green { color: var(--green-score); }
+  .insight-val.red   { color: var(--red-score); }
+  .insight-lbl {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ── Score Table ── */
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    background: rgba(0,0,0,0.4);
+    padding: 12px 20px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-align: left;
+    white-space: nowrap;
+  }
+  tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.15s;
+    animation: rowIn 0.3s ease both;
+  }
+  @keyframes rowIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  tbody tr:hover { background: rgba(255,255,255,0.04); }
+  tbody td {
+    padding: 13px 20px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 300;
+  }
+  .td-week { font-weight: 500; color: var(--white); }
+  .td-score { font-weight: 500; }
+  .score-under { color: var(--green-score); }
+  .score-over  { color: var(--red-score); }
+  .score-even  { color: rgba(255,255,255,0.85); }
+
+  /* trend arrows */
+  .trend-up   { color: var(--green-score); font-size: 11px; }
+  .trend-down { color: var(--red-score);   font-size: 11px; }
+  .trend-flat { color: var(--muted);       font-size: 11px; }
+
+  /* division badge */
+  .div-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .div-Black  { background: rgba(255,255,255,0.12); color: #ddd; }
+  .div-Purple { background: rgba(140,80,180,0.25);  color: #c8a0e8; }
+  .div-Blue   { background: rgba(60,120,200,0.25);  color: #90b8f0; }
+  .div-Green  { background: rgba(60,160,80,0.25);   color: #80d080; }
+  .div-Orange { background: rgba(200,120,40,0.25);  color: #f0a860; }
+  .div-Red    { background: rgba(200,60,60,0.25);   color: #f08080; }
+
+  /* sub marker */
+  .sub-tag {
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* ── Source tag ── */
+  .source-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 6px 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    text-decoration: none;
+    margin-top: 4px;
+    transition: all 0.2s;
+  }
+  .source-tag:hover { color: var(--gold); border-color: rgba(201, 168, 76, 0.4); }
+
+  /* ── Empty state ── */
+  #empty-state {
+    text-align: center;
+    padding: 80px 24px;
+    color: var(--muted);
+  }
+  .empty-icon { font-size: 64px; margin-bottom: 16px; opacity: 0.4; }
+  .empty-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 8px;
+  }
+  .empty-sub { font-size: 14px; font-weight: 300; }
+
+  /* ── Leaderboard ── */
+  #leaderboard-section { display: none; }
+  .lb-controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .lb-controls label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  select {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 4px;
+    padding: 8px 14px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+  }
+  select option { background: #1a3a1a; }
+
+  .lb-table-wrap {
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .lb-rank {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--muted);
+    width: 48px;
+  }
+  .lb-rank.gold-rank   { color: #FFD700; }
+  .lb-rank.silver-rank { color: #C0C0C0; }
+  .lb-rank.bronze-rank { color: #CD7F32; }
+  .lb-name { font-weight: 500; }
+  .lb-bar-wrap { width: 160px; }
+  .lb-bar-bg {
+    background: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .lb-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--green-mid), var(--gold));
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ── Info box ── */
+
+  footer {
+    margin-top: 60px;
+    padding: 24px 0;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+  /* ── Hole Breakdown ── */
+  .hole-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 24px 0 12px;
+  }
+  .hole-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .hole-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .hole-card-header {
+    background: rgba(0,0,0,0.3);
+    padding: 8px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .hole-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: var(--gold);
+  }
+  .hole-played {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .hole-stats {
+    padding: 10px 14px;
+    display: flex;
+    gap: 16px;
+  }
+  .hole-stat {
+    text-align: center;
+    flex: 1;
+  }
+  .hole-stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    line-height: 1;
+  }
+  .hole-stat-lbl {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .hole-score-row {
+    padding: 0 14px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .hole-score-pip {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .pip-eagle  { background: rgba(255,215,0,0.25);   color: #FFD700; border-color: rgba(255,215,0,0.4); }
+  .pip-birdie { background: rgba(94,201,94,0.2);    color: var(--green-score); border-color: rgba(94,201,94,0.4); }
+  .pip-par    { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
+  .pip-bogey  { background: rgba(224,112,112,0.15); color: var(--red-score); border-color: rgba(224,112,112,0.3); }
+  .pip-double { background: rgba(224,112,112,0.3);  color: #ff6060; border-color: rgba(224,112,112,0.5); }
+  .pip-worse  { background: rgba(180,60,60,0.4);    color: #ff4040; border-color: rgba(180,60,60,0.6); }
+
+  /* ════════════════════════════════════════
+     MOBILE RESPONSIVE
+  ════════════════════════════════════════ */
+  @media (max-width: 600px) {
+
+    /* Container */
+    .container { padding: 0 16px; }
+
+    /* Header */
+    header { padding: 28px 0 20px; margin-bottom: 24px; }
+
+    /* Tabs */
+    .tab { padding: 10px 14px; font-size: 12px; }
+
+    /* Search */
+    .search-section { margin-bottom: 24px; }
+    .search-row { flex-direction: column; align-items: stretch; }
+    .search-row input[type="text"] { min-width: unset; width: 100%; }
+    .search-row .btn { width: 100%; }
+
+    /* Player header — stack vertically */
+    .player-header { flex-direction: column; align-items: flex-start; padding: 20px 18px; gap: 16px; }
+    .player-name { font-size: 36px; }
+
+    /* Stat chips — 3 across */
+    .stat-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; }
+    .chip { padding: 8px 6px; }
+    .chip-val { font-size: 20px; }
+    .chip-lbl { font-size: 8px; letter-spacing: 1px; }
+
+    /* Insights row — 2 across */
+    .insights-row { grid-template-columns: repeat(2, 1fr); }
+    .insight-cell { padding: 12px 10px; }
+    .insight-val { font-size: 18px; }
+    .insight-lbl { font-size: 8px; }
+
+    /* Charts — stack and reduce height */
+    .charts-row { grid-template-columns: 1fr; }
+    .chart-panel { padding: 16px; }
+    .chart-panel + .chart-panel { border-left: none; border-top: 1px solid rgba(255,255,255,0.07); }
+
+    /* Score table — hide less critical columns, tighten padding */
+    thead th, tbody td { padding: 10px 8px; font-size: 12px; }
+    thead th { font-size: 9px; letter-spacing: 1px; }
+
+    /* Hide Trend and vs Par columns on mobile — show most important cols */
+    table thead tr th:nth-child(7),
+    table thead tr th:nth-child(8),
+    table tbody tr td:nth-child(7),
+    table tbody tr td:nth-child(8) { display: none; }
+
+    /* Tighten the week label */
+    .td-week { font-size: 12px; }
+
+    /* Hole grid — 2 columns on mobile */
+    .hole-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .hole-card-header { padding: 6px 10px; }
+    .hole-stats { padding: 8px 10px; gap: 8px; }
+    .hole-score-row { padding: 0 10px 8px; gap: 3px; }
+    .hole-score-pip { width: 22px; height: 22px; font-size: 10px; }
+
+    /* Scoring summary pie — stack vertically */
+    #scoring-summary > div { flex-direction: column; align-items: center; padding: 20px 16px; }
+    #scoring-summary canvas { width: 180px !important; height: 180px !important; }
+    #pie-legend { grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
+
+    /* Leaderboard controls — stack */
+    .lb-controls { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .lb-controls label { margin-top: 4px; }
+    .lb-controls select { width: 100%; }
+
+    /* Leaderboard table — card style on mobile */
+    .lb-table-wrap { border: none; background: transparent; }
+    .lb-table-wrap table { display: block; }
+    .lb-table-wrap thead { display: none; }
+    .lb-table-wrap tbody { display: flex; flex-direction: column; gap: 10px; }
+    .lb-table-wrap tbody tr {
+      display: grid;
+      grid-template-columns: 40px 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 2px 8px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 14px 12px;
+      animation: rowIn 0.3s ease both;
+    }
+    .lb-table-wrap tbody tr td { padding: 0; border: none; font-size: 13px; }
+
+    /* Rank — spans 2 rows */
+    .lb-table-wrap tbody tr td:nth-child(1) {
+      grid-column: 1; grid-row: 1 / 3;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+    /* Name */
+    .lb-table-wrap tbody tr td:nth-child(2) {
+      grid-column: 2 / 4; grid-row: 1;
+      font-weight: 600; font-size: 14px;
+    }
+    /* Division */
+    .lb-table-wrap tbody tr td:nth-child(3) {
+      grid-column: 2; grid-row: 2;
+      display: flex; align-items: center;
+    }
+    /* Rounds */
+    .lb-table-wrap tbody tr td:nth-child(4) {
+      grid-column: 3; grid-row: 2;
+      color: var(--muted); font-size: 12px;
+      display: flex; align-items: center;
+    }
+    .lb-table-wrap tbody tr td:nth-child(4)::before { content: 'Rounds: '; color: var(--muted); margin-right: 2px; }
+    /* Hide avg gross, best net, consistency, bar on mobile — keep avg net */
+    .lb-table-wrap tbody tr td:nth-child(5),
+    .lb-table-wrap tbody tr td:nth-child(7),
+    .lb-table-wrap tbody tr td:nth-child(8),
+    .lb-table-wrap tbody tr td:nth-child(9) { display: none; }
+    /* Avg net — show inline after rounds row */
+    .lb-table-wrap tbody tr td:nth-child(6) {
+      grid-column: 3; grid-row: 2;
+      font-weight: 600; font-size: 14px; color: var(--green-score);
+      display: flex; align-items: center; justify-content: flex-end;
+    }
+    .lb-table-wrap tbody tr td:nth-child(6)::before { content: 'Net: '; color: var(--muted); font-weight: 300; font-size: 11px; margin-right: 3px; }
+
+    /* Leaderboard — hide rounds cell on mobile since avg net replaces it */
+    .lb-table-wrap tbody tr td:nth-child(4) { display: none; }
+
+    /* Footer */
+    footer { font-size: 11px; margin-top: 40px; }
+  }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="league-label">⛳ 2025 Season</div>
+    <h1>Thursday Night<br><span>Men's League</span></h1>
+    <div class="header-sub">Player Score History — Spencer Country Club</div>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('player')">Player Stats</button>
+    <button class="tab" onclick="switchTab('leaderboard')">Leaderboard</button>
+  </div>
+
+  <!-- ════ PLAYER TAB ════ -->
+  <div id="tab-player" class="tab-panel active">
+
+    <div class="search-section">
+      <span class="search-label">Search Player</span>
+      <div class="search-row">
+        <input type="text" id="player-input" placeholder="e.g. Ryan Frankenstein" autocomplete="off">
+        <button class="btn" onclick="searchPlayer()">FIND SCORES</button>
+      </div>
+    </div>
+
+    <div id="status"></div>
+
+    <!-- Player Card -->
+    <div id="player-card">
+      <div class="player-header">
+        <div>
+          <div class="player-name" id="card-name"></div>
+          <div class="player-meta" id="card-meta"></div>
+          <a href="https://www.golfgenius.com/pages/11625213179092549884" target="_blank" class="source-tag">
+            🔗 GolfGenius Source
+          </a>
+        </div>
+        <div class="stat-chips" id="stat-chips"></div>
+      </div>
+
+      <div class="card-body">
+        <!-- Insight bar -->
+        <div class="insights-row" id="insights-row"></div>
+
+        <!-- Charts -->
+        <div class="charts-row">
+          <div class="chart-panel">
+            <div class="chart-title">Score Trend — Gross &amp; Net by Week</div>
+            <div class="chart-container" style="height:180px">
+              <canvas id="trend-chart"></canvas>
+            </div>
+          </div>
+          <div class="chart-panel">
+            <div class="chart-title">Score Distribution — Gross</div>
+            <div class="chart-container" style="height:180px">
+              <canvas id="dist-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Score table -->
+        <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Week</th>
+              <th>Division</th>
+              <th>Hcp</th>
+              <th>Gross (9)</th>
+              <th>Net (9)</th>
+              <th>vs Par</th>
+              <th>Trend</th>
+            </tr>
+          </thead>
+          <tbody id="results-tbody"></tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hole Breakdown -->
+    <div id="hole-breakdown" style="display:none; margin-bottom:40px;">
+      <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:var(--gold); margin-bottom:16px;">
+        Hole-by-Hole Breakdown
+      </div>
+      <div id="hole-breakdown-body"></div>
+    </div>
+
+    <!-- Scoring Summary Pie -->
+    <div id="scoring-summary" style="display:none; margin-bottom:48px;">
+      <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:var(--gold); margin-bottom:16px;">
+        Scoring Summary — All Holes
+      </div>
+      <div style="display:flex; align-items:center; gap:40px; flex-wrap:wrap; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:28px 32px;">
+        <div style="position:relative; width:220px; height:220px; flex-shrink:0;">
+          <canvas id="pie-chart"></canvas>
+        </div>
+        <div id="pie-legend" style="flex:1; min-width:200px; display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-state">
+      <div class="empty-icon">🏌️</div>
+      <div class="empty-title">Search for a Player</div>
+      <div class="empty-sub">Enter a name above or load your scraped JSON to see score history</div>
+    </div>
+
+  </div><!-- /tab-player -->
+
+  <!-- ════ LEADERBOARD TAB ════ -->
+  <div id="tab-leaderboard" class="tab-panel">
+    <div id="leaderboard-section">
+      <div class="lb-controls">
+        <label>Division</label>
+        <select id="lb-division" onchange="renderLeaderboard()">
+          <option value="all">All Divisions</option>
+          <option value="Black">Black</option>
+          <option value="Purple">Purple</option>
+          <option value="Blue">Blue</option>
+          <option value="Green">Green</option>
+          <option value="Orange">Orange</option>
+          <option value="Red">Red</option>
+        </select>
+        <label>Sort by</label>
+        <select id="lb-sort" onchange="renderLeaderboard()">
+          <option value="avg_net">Avg Net Score</option>
+          <option value="avg_gross">Avg Gross Score</option>
+          <option value="best_net">Best Net Round</option>
+          <option value="rounds">Most Rounds</option>
+        </select>
+        <label>Min rounds</label>
+        <select id="lb-min-rounds" onchange="renderLeaderboard()">
+          <option value="1">1+</option>
+          <option value="3">3+</option>
+          <option value="5" selected>5+</option>
+          <option value="8">8+</option>
+        </select>
+      </div>
+      <div class="lb-table-wrap table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:48px">#</th>
+              <th>Player</th>
+              <th>Division</th>
+              <th>Rounds</th>
+              <th>Avg Gross</th>
+              <th>Avg Net</th>
+              <th>Best Net</th>
+              <th>Consistency</th>
+              <th style="width:160px">Avg Net (visual)</th>
+            </tr>
+          </thead>
+          <tbody id="lb-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="lb-empty" style="text-align:center; padding:80px 24px; color:var(--muted)">
+      <div class="empty-icon">🏆</div>
+      <div class="empty-title">No Data Loaded</div>
+      <div class="empty-sub">Load your all_results.json on the Player Stats tab first</div>
+    </div>
+  </div><!-- /tab-leaderboard -->
+
+  <footer>
+    2025 Thursday Night Men's League &nbsp;·&nbsp; Data sourced from GolfGenius &nbsp;·&nbsp; Spencer Country Club
+  </footer>
+</div><!-- /container -->
+
+<script>
+let allData = [];
+let trendChart = null;
+let distChart  = null;
+let pieChart   = null;
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', ['player','leaderboard'][i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'leaderboard') renderLeaderboard();
+}
+
+// ── Auto-fetch JSON on page load ──────────────────────────────────────────────
+async function loadData() {
+  try {
+    showStatus('loading', '<div style="width:12px;height:12px;border:2px solid rgba(201,168,76,0.3);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0"></div> Loading league data...');
+    const resp = await fetch('all_results.json');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const parsed = await resp.json();
+    allData = parsed.results || parsed;
+    const updatedAt = parsed.generated_at
+      ? new Date(parsed.generated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      : null;
+    showStatus('loading', `✓ ${allData.length} records loaded${updatedAt ? ' · Updated ' + updatedAt : ''}`);
+    setTimeout(() => document.getElementById('status').style.display = 'none', 3000);
+  } catch(err) {
+    showStatus('error', '⚠ Could not load all_results.json — make sure it\'s in the same folder as this HTML file.');
+  }
+}
+loadData();
+
+// ── Search ────────────────────────────────────────────────────────────────────
+function searchPlayer() {
+  const name = document.getElementById('player-input').value.trim();
+  if (!name) return;
+  if (allData.length === 0) {
+    showStatus('error', 'Data is still loading — please wait a moment and try again.');
+    return;
+  }
+
+  const matches = allData.filter(r =>
+    r.player && r.player.toLowerCase().includes(name.toLowerCase())
+  );
+
+  if (matches.length === 0) {
+    showStatus('error', `No results for "${name}".`);
+    document.getElementById('player-card').style.display = 'none';
+    document.getElementById('empty-state').style.display = 'block';
+    return;
+  }
+  renderPlayer(name, matches);
+}
+
+document.getElementById('player-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') searchPlayer();
+});
+
+// ── Render player ─────────────────────────────────────────────────────────────
+function renderPlayer(searchName, records) {
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('status').style.display = 'none';
+  const card = document.getElementById('player-card');
+  card.style.display = 'block';
+
+  // Sort by week number numerically (lexical sort puts Week 10 before Week 2)
+  const weekNum = w => parseInt((w.week || '').match(/\d+/) || [0]);
+  records = [...records].sort((a, b) => weekNum(a) - weekNum(b));
+
+  const name = records[0].player || searchName;
+  document.getElementById('card-name').textContent = name;
+
+  // Detect which weeks this player was a sub (division differs from their usual one)
+  const divCount = {};
+  records.forEach(r => divCount[r.division] = (divCount[r.division]||0)+1);
+  const primaryDiv = Object.entries(divCount).sort((a,b)=>b[1]-a[1])[0][0];
+
+  const nets   = records.map(r => parseFloat(r.net)).filter(n => !isNaN(n));
+  const grosses= records.map(r => parseFloat(r.gross)).filter(n => !isNaN(n));
+  const avg    = arr => arr.length ? (arr.reduce((a,b)=>a+b,0)/arr.length) : null;
+  const best   = arr => arr.length ? Math.min(...arr) : null;
+  const worst  = arr => arr.length ? Math.max(...arr) : null;
+  const stddev = arr => {
+    if (arr.length < 2) return null;
+    const m = avg(arr);
+    return Math.sqrt(arr.reduce((s,v)=>s+Math.pow(v-m,2),0)/arr.length);
+  };
+
+  const avgNet   = avg(nets);
+  const avgGross = avg(grosses);
+  const bestNet  = best(nets);
+  const worstNet = worst(nets);
+  const consist  = stddev(nets);
+
+  document.getElementById('card-meta').textContent =
+    `${records.length} round${records.length!==1?'s':''} · Primary division: ${primaryDiv}`;
+
+  // ── Stat chips ──
+  const PAR9 = 36;
+  const chipsEl = document.getElementById('stat-chips');
+  chipsEl.innerHTML = [
+    { val: records.length,                        lbl: 'Rounds',    cls: '' },
+    { val: avgGross ? avgGross.toFixed(1) : '—',  lbl: 'Avg Gross', cls: '' },
+    { val: avgNet   ? avgNet.toFixed(1)   : '—',  lbl: 'Avg Net',   cls: avgNet<PAR9?'good':avgNet>PAR9?'bad':'' },
+    { val: bestNet  !== null ? bestNet    : '—',  lbl: 'Best Net',  cls: 'good' },
+    { val: consist  ? consist.toFixed(1) : '—',   lbl: 'Std Dev',   cls: '' },
+  ].map(c => `<div class="chip">
+    <div class="chip-val ${c.cls}">${c.val}</div>
+    <div class="chip-lbl">${c.lbl}</div>
+  </div>`).join('');
+
+  // ── Insight row ──
+  const handicaps = records.map(r => parseInt(r.handicap)).filter(n => !isNaN(n));
+  const firstHcp  = handicaps.length ? handicaps[0] : null;
+  const lastHcp   = handicaps.length ? handicaps[handicaps.length-1] : null;
+  const hcpDelta  = (firstHcp!==null && lastHcp!==null) ? lastHcp - firstHcp : null;
+
+  const underscore = nets.filter(n => n < PAR9).length;
+  const overScore  = nets.filter(n => n > PAR9).length;
+
+  const insightsEl = document.getElementById('insights-row');
+  const insightData = [
+    {
+      val: worstNet !== null ? worstNet : '—',
+      lbl: 'Worst Net',
+      cls: 'red'
+    },
+    {
+      val: (avgNet && avgGross) ? (avgGross - avgNet).toFixed(1) : '—',
+      lbl: 'Avg Stroke Savings',
+      cls: 'gold'
+    },
+    {
+      val: underscore + '/' + records.length,
+      lbl: 'Rounds Under Par',
+      cls: 'green'
+    },
+    {
+      val: hcpDelta !== null
+        ? (hcpDelta > 0 ? '+' + hcpDelta : hcpDelta)
+        : '—',
+      lbl: 'Hcp Change (season)',
+      cls: hcpDelta !== null ? (hcpDelta > 0 ? 'red' : hcpDelta < 0 ? 'green' : '') : ''
+    },
+  ];
+  insightsEl.innerHTML = insightData.map(d => `
+    <div class="insight-cell">
+      <div class="insight-val ${d.cls}">${d.val}</div>
+      <div class="insight-lbl">${d.lbl}</div>
+    </div>`).join('');
+
+  // ── Charts ──
+  renderTrendChart(records);
+  renderDistChart(grosses);
+
+  // ── Table ──
+  const tbody = document.getElementById('results-tbody');
+  tbody.innerHTML = '';
+  records.forEach((r, i) => {
+    const net   = parseFloat(r.net);
+    const gross = parseFloat(r.gross);
+    const prevGross = i > 0 ? parseFloat(records[i-1].gross) : null;
+
+    let scoreClass = 'score-even';
+    if (!isNaN(net)) {
+      if (net < PAR9)      scoreClass = 'score-under';
+      else if (net > PAR9) scoreClass = 'score-over';
+    }
+
+    // vs par based on gross
+    const vsPar = !isNaN(gross) ? (gross - PAR9) : null;
+    const vsParStr = vsPar !== null
+      ? (vsPar === 0 ? 'E' : (vsPar > 0 ? '+'+vsPar : vsPar))
+      : '—';
+    const vsParClass = vsPar !== null
+      ? (vsPar < 0 ? 'score-under' : vsPar > 0 ? 'score-over' : 'score-even')
+      : '';
+
+    // trend arrow based on gross
+    let trendHtml = '<span class="trend-flat">—</span>';
+    if (prevGross !== null && !isNaN(gross)) {
+      const diff = gross - prevGross;
+      if (diff < 0)      trendHtml = `<span class="trend-up">▲ ${Math.abs(diff)}</span>`;
+      else if (diff > 0) trendHtml = `<span class="trend-down">▼ ${diff}</span>`;
+      else               trendHtml = `<span class="trend-flat">= 0</span>`;
+    }
+
+    // sub tag
+    const isSub = r.division !== primaryDiv;
+    const subTag = isSub ? '<span class="sub-tag">Sub</span>' : '';
+
+    // division badge
+    const divClass = 'div-' + (r.division || 'Black');
+
+    const tr = document.createElement('tr');
+    tr.style.animationDelay = `${i * 25}ms`;
+    tr.innerHTML = `
+      <td style="color:var(--muted);font-size:12px">${i+1}</td>
+      <td class="td-week">${r.week || 'Week '+(i+1)}</td>
+      <td><span class="div-badge ${divClass}">${r.division||'—'}</span>${subTag}</td>
+      <td style="color:var(--muted);font-size:13px">${r.handicap ?? '—'}</td>
+      <td class="td-score">${r.gross || '—'}</td>
+      <td class="td-score ${scoreClass}">${r.net || '—'}</td>
+      <td class="td-score ${vsParClass}" style="font-size:13px">${vsParStr}</td>
+      <td>${trendHtml}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // ── Hole breakdown ──
+  renderHoleBreakdown(records);
+}
+
+// ── Trend chart ───────────────────────────────────────────────────────────────
+function renderTrendChart(records) {
+  const labels = records.map(r => r.week.replace(/Week\s+/, 'Wk ').split('(')[0].trim());
+  const grossData = records.map(r => parseFloat(r.gross) || null);
+  const netData   = records.map(r => parseFloat(r.net)   || null);
+
+  if (trendChart) trendChart.destroy();
+  const ctx = document.getElementById('trend-chart').getContext('2d');
+  trendChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Gross',
+          data: grossData,
+          borderColor: 'rgba(201,168,76,0.7)',
+          backgroundColor: 'rgba(201,168,76,0.08)',
+          borderWidth: 2,
+          pointBackgroundColor: 'rgba(201,168,76,0.9)',
+          pointRadius: 4,
+          tension: 0.3,
+          fill: false,
+        },
+        {
+          label: 'Net',
+          data: netData,
+          borderColor: 'rgba(94,201,94,0.9)',
+          backgroundColor: 'rgba(94,201,94,0.08)',
+          borderWidth: 2,
+          pointBackgroundColor: 'rgba(94,201,94,1)',
+          pointRadius: 4,
+          tension: 0.3,
+          fill: false,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: 'rgba(255,255,255,0.5)',
+            font: { size: 11 },
+            boxWidth: 12,
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(14,31,14,0.95)',
+          borderColor: 'rgba(201,168,76,0.4)',
+          borderWidth: 1,
+          titleColor: '#c9a84c',
+          bodyColor: '#fff',
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } },
+          grid:  { color: 'rgba(255,255,255,0.05)' }
+        },
+        y: {
+          ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } },
+          grid:  { color: 'rgba(255,255,255,0.05)' },
+          // annotation line at par (36)
+          afterDataLimits(axis) {
+            axis.min = Math.min(axis.min, 34);
+            axis.max = Math.max(axis.max, 38);
+          }
+        }
+      }
+    }
+  });
+}
+
+// ── Distribution chart ────────────────────────────────────────────────────────
+function renderDistChart(grosses) {
+  // Bucket gross scores into ranges (gross runs higher than net)
+  const buckets = { '≤36': 0, '37-39': 0, '40-42': 0, '43-45': 0, '46-48': 0, '49-51': 0, '52+': 0 };
+  grosses.forEach(g => {
+    if      (g <= 36) buckets['≤36']++;
+    else if (g <= 39) buckets['37-39']++;
+    else if (g <= 42) buckets['40-42']++;
+    else if (g <= 45) buckets['43-45']++;
+    else if (g <= 48) buckets['46-48']++;
+    else if (g <= 51) buckets['49-51']++;
+    else              buckets['52+']++;
+  });
+
+  const colors = [
+    'rgba(94,201,94,0.8)',
+    'rgba(94,201,94,0.6)',
+    'rgba(94,201,94,0.4)',
+    'rgba(201,168,76,0.8)',
+    'rgba(224,112,112,0.4)',
+    'rgba(224,112,112,0.6)',
+    'rgba(224,112,112,0.8)',
+  ];
+
+  if (distChart) distChart.destroy();
+  const ctx = document.getElementById('dist-chart').getContext('2d');
+  distChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(buckets),
+      datasets: [{
+        data: Object.values(buckets),
+        backgroundColor: colors,
+        borderRadius: 3,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(14,31,14,0.95)',
+          borderColor: 'rgba(201,168,76,0.4)',
+          borderWidth: 1,
+          titleColor: '#c9a84c',
+          bodyColor: '#fff',
+          callbacks: {
+            label: ctx => ` ${ctx.raw} round${ctx.raw!==1?'s':''}`
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } }, grid: { display: false } },
+        y: { ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 }, stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } }
+      }
+    }
+  });
+}
+
+// ── Hole breakdown ────────────────────────────────────────────────────────────
+function renderHoleBreakdown(records) {
+  const section = document.getElementById('hole-breakdown');
+  const body    = document.getElementById('hole-breakdown-body');
+
+  // Collect all hole scores across all rounds
+  // holes are stored as {"10":4,"11":5,...} etc (back nine) or {"1":4,...} (front nine)
+  const holeData = {}; // hole number -> array of scores
+
+  records.forEach(r => {
+    if (!r.holes || typeof r.holes !== 'object') return;
+    Object.entries(r.holes).forEach(([hole, score]) => {
+      const h = parseInt(hole);
+      if (!holeData[h]) holeData[h] = [];
+      holeData[h].push({ score, week: r.week });
+    });
+  });
+
+  const holeNums = Object.keys(holeData).map(Number).sort((a,b) => a-b);
+  if (holeNums.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+
+  // Group into front (1-9) and back (10-18)
+  const front = holeNums.filter(h => h <= 9);
+  const back  = holeNums.filter(h => h >= 10);
+
+  // Standard par values for Saukcentre back nine (holes 10-18)
+  // Without knowing exact pars, use 4 as default — can be adjusted
+  const PAR_LOOKUP = {
+    1:4, 2:5, 3:4, 4:4, 5:3, 6:5, 7:4, 8:4, 9:3,
+    10:4, 11:5, 12:4, 13:3, 14:5, 15:4, 16:4, 17:3, 18:4
+  };
+
+  function pipClass(score, par) {
+    const diff = score - par;
+    if (diff <= -2) return 'pip-eagle';
+    if (diff === -1) return 'pip-birdie';
+    if (diff === 0)  return 'pip-par';
+    if (diff === 1)  return 'pip-bogey';
+    if (diff === 2)  return 'pip-double';
+    return 'pip-worse';
+  }
+
+  function buildHoleCard(holeNum) {
+    const scores = holeData[holeNum];
+    const par    = PAR_LOOKUP[holeNum] || 4;
+    const avg    = (scores.reduce((s,e) => s+e.score, 0) / scores.length).toFixed(1);
+    const best   = Math.min(...scores.map(e => e.score));
+    const worst  = Math.max(...scores.map(e => e.score));
+    const avgVsPar = (parseFloat(avg) - par);
+    const avgClass = avgVsPar < 0 ? 'var(--green-score)' : avgVsPar > 0 ? 'var(--red-score)' : 'var(--gold)';
+    const avgStr   = avgVsPar === 0 ? 'E' : (avgVsPar > 0 ? '+' : '') + avgVsPar.toFixed(1);
+
+    const pips = scores.map(e =>
+      `<div class="hole-score-pip ${pipClass(e.score, par)}" title="${e.week}">${e.score}</div>`
+    ).join('');
+
+    return `
+      <div class="hole-card">
+        <div class="hole-card-header">
+          <span class="hole-number">Hole ${holeNum}</span>
+          <span class="hole-played">${scores.length} round${scores.length!==1?'s':''} · Par ${par}</span>
+        </div>
+        <div class="hole-stats">
+          <div class="hole-stat">
+            <div class="hole-stat-val" style="color:${avgClass}">${avg}</div>
+            <div class="hole-stat-lbl">Avg (${avgStr})</div>
+          </div>
+          <div class="hole-stat">
+            <div class="hole-stat-val" style="color:var(--green-score)">${best}</div>
+            <div class="hole-stat-lbl">Best</div>
+          </div>
+          <div class="hole-stat">
+            <div class="hole-stat-val" style="color:var(--red-score)">${worst}</div>
+            <div class="hole-stat-lbl">Worst</div>
+          </div>
+        </div>
+        <div class="hole-score-row">${pips}</div>
+      </div>`;
+  }
+
+  let html = '';
+  if (front.length > 0) {
+    html += `<div class="hole-section-label">Front Nine</div>
+             <div class="hole-grid">${front.map(buildHoleCard).join('')}</div>`;
+  }
+  if (back.length > 0) {
+    html += `<div class="hole-section-label">Back Nine</div>
+             <div class="hole-grid">${back.map(buildHoleCard).join('')}</div>`;
+  }
+
+  body.innerHTML = html;
+
+  // Build scoring summary from same hole data
+  renderScoringPie(holeData);
+}
+
+// ── Scoring summary pie ───────────────────────────────────────────────────────
+function renderScoringPie(holeData) {
+  const section = document.getElementById('scoring-summary');
+
+  const PAR_LOOKUP = {
+    1:4, 2:5, 3:4, 4:4, 5:3, 6:5, 7:4, 8:4, 9:3,
+    10:4, 11:5, 12:4, 13:3, 14:5, 15:4, 16:4, 17:3, 18:4
+  };
+
+  const counts = { eagle: 0, birdie: 0, par: 0, bogey: 0, double: 0, triple: 0 };
+
+  Object.entries(holeData).forEach(([hole, scores]) => {
+    const par = PAR_LOOKUP[parseInt(hole)] || 4;
+    scores.forEach(({ score }) => {
+      const diff = score - par;
+      if      (diff <= -2) counts.eagle++;
+      else if (diff === -1) counts.birdie++;
+      else if (diff === 0)  counts.par++;
+      else if (diff === 1)  counts.bogey++;
+      else if (diff === 2)  counts.double++;
+      else                  counts.triple++;
+    });
+  });
+
+  const total = Object.values(counts).reduce((a,b) => a+b, 0);
+  if (total === 0) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+
+  const labels  = ['Eagle or Better', 'Birdie', 'Par', 'Bogey', 'Double Bogey', 'Triple or Worse'];
+  const values  = [counts.eagle, counts.birdie, counts.par, counts.bogey, counts.double, counts.triple];
+  const colors  = ['#FFD700', '#5ec95e', '#a8c8a8', '#e07070', '#c84040', '#8b1a1a'];
+  const borders = ['#b8960a', '#3aaa3a', '#7aaa7a', '#c05050', '#a02020', '#600a0a'];
+
+  if (pieChart) pieChart.destroy();
+  const ctx = document.getElementById('pie-chart').getContext('2d');
+  pieChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderColor: borders,
+        borderWidth: 2,
+        hoverOffset: 8,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '60%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(14,31,14,0.95)',
+          borderColor: 'rgba(201,168,76,0.4)',
+          borderWidth: 1,
+          titleColor: '#c9a84c',
+          bodyColor: '#fff',
+          callbacks: {
+            label: ctx => {
+              const pct = ((ctx.raw / total) * 100).toFixed(1);
+              return `  ${ctx.raw} holes (${pct}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // Custom legend
+  const legend = document.getElementById('pie-legend');
+  legend.innerHTML = labels.map((lbl, i) => {
+    const pct = ((values[i] / total) * 100).toFixed(1);
+    return `
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="width:14px; height:14px; border-radius:3px; background:${colors[i]}; flex-shrink:0;"></div>
+        <div>
+          <div style="font-size:13px; font-weight:500; color:var(--white);">${lbl}</div>
+          <div style="font-size:12px; color:var(--muted);">${values[i]} holes &nbsp;·&nbsp; ${pct}%</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Leaderboard ───────────────────────────────────────────────────────────────
+function renderLeaderboard() {
+  if (allData.length === 0) {
+    document.getElementById('leaderboard-section').style.display = 'none';
+    document.getElementById('lb-empty').style.display = 'block';
+    return;
+  }
+  document.getElementById('leaderboard-section').style.display = 'block';
+  document.getElementById('lb-empty').style.display = 'none';
+
+  const divFilter   = document.getElementById('lb-division').value;
+  const sortBy      = document.getElementById('lb-sort').value;
+  const minRounds   = parseInt(document.getElementById('lb-min-rounds').value);
+
+  // Aggregate by player
+  const playerMap = {};
+  allData.forEach(r => {
+    if (divFilter !== 'all' && r.division !== divFilter) return;
+    const key = r.player;
+    if (!playerMap[key]) {
+      playerMap[key] = {
+        name: r.player,
+        divisions: new Set(),
+        rounds: 0,
+        grossSum: 0, grossCount: 0,
+        netSum: 0,   netCount: 0,
+        bestNet: Infinity,
+        nets: [],
+      };
+    }
+    const p = playerMap[key];
+    p.rounds++;
+    p.divisions.add(r.division);
+    const g = parseFloat(r.gross);
+    const n = parseFloat(r.net);
+    if (!isNaN(g)) { p.grossSum += g; p.grossCount++; }
+    if (!isNaN(n)) { p.netSum += n; p.netCount++; p.nets.push(n); p.bestNet = Math.min(p.bestNet, n); }
+  });
+
+  // Build rows and filter by min rounds
+  let rows = Object.values(playerMap)
+    .filter(p => p.rounds >= minRounds)
+    .map(p => ({
+      ...p,
+      avgGross: p.grossCount ? p.grossSum / p.grossCount : null,
+      avgNet:   p.netCount   ? p.netSum   / p.netCount   : null,
+      bestNet:  p.bestNet === Infinity ? null : p.bestNet,
+      stddev:   stddev(p.nets),
+      divsStr:  [...p.divisions].join(', '),
+    }));
+
+  // Sort
+  rows.sort((a, b) => {
+    if (sortBy === 'avg_net')   return (a.avgNet   ?? 999) - (b.avgNet   ?? 999);
+    if (sortBy === 'avg_gross') return (a.avgGross ?? 999) - (b.avgGross ?? 999);
+    if (sortBy === 'best_net')  return (a.bestNet  ?? 999) - (b.bestNet  ?? 999);
+    if (sortBy === 'rounds')    return b.rounds - a.rounds;
+    return 0;
+  });
+
+  // Bar scale
+  const allAvgNets = rows.map(r => r.avgNet).filter(Boolean);
+  const minNet = allAvgNets.length ? Math.min(...allAvgNets) : 30;
+  const maxNet = allAvgNets.length ? Math.max(...allAvgNets) : 50;
+  const barPct = val => val ? Math.max(5, Math.min(100, 100 - ((val - minNet) / (maxNet - minNet + 0.01)) * 80)) : 0;
+
+  const tbody = document.getElementById('lb-tbody');
+  tbody.innerHTML = '';
+  rows.forEach((p, i) => {
+    const rankClass = i===0 ? 'gold-rank' : i===1 ? 'silver-rank' : i===2 ? 'bronze-rank' : '';
+    const tr = document.createElement('tr');
+    tr.style.animationDelay = `${i * 20}ms`;
+    tr.innerHTML = `
+      <td class="lb-rank ${rankClass}">${i+1}</td>
+      <td class="lb-name">${p.name}</td>
+      <td><span class="div-badge div-${p.divsStr.split(',')[0].trim()}">${p.divsStr}</span></td>
+      <td style="color:var(--muted)">${p.rounds}</td>
+      <td>${p.avgGross ? p.avgGross.toFixed(1) : '—'}</td>
+      <td style="color:var(--green-score);font-weight:500">${p.avgNet ? p.avgNet.toFixed(1) : '—'}</td>
+      <td style="color:var(--gold)">${p.bestNet ?? '—'}</td>
+      <td style="color:var(--muted);font-size:12px">${p.stddev ? '±'+p.stddev.toFixed(1) : '—'}</td>
+      <td class="lb-bar-wrap">
+        <div class="lb-bar-bg"><div class="lb-bar-fill" style="width:${barPct(p.avgNet)}%"></div></div>
+      </td>
+    `;
+    tr.style.animation = `rowIn 0.3s ease both`;
+    tbody.appendChild(tr);
+  });
+
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--muted)">No players with ${minRounds}+ rounds in this division</td></tr>`;
+  }
+}
+
+function stddev(arr) {
+  if (!arr || arr.length < 2) return null;
+  const m = arr.reduce((a,b)=>a+b,0)/arr.length;
+  return Math.sqrt(arr.reduce((s,v)=>s+Math.pow(v-m,2),0)/arr.length);
+}
+
+// ── Status ────────────────────────────────────────────────────────────────────
+function showStatus(type, msg) {
+  const el = document.getElementById('status');
+  el.className = type === 'error' ? 'error' : 'loading';
+  el.style.display = 'block';
+  el.innerHTML = type === 'error'
+    ? msg
+    : `<div style="width:12px;height:12px;border:2px solid rgba(201,168,76,0.3);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0"></div> ${msg}`;
+}
+
+</script>
+</body>
+</html>
