@@ -61,6 +61,14 @@
     margin-bottom: 40px;
   }
 
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
   .league-label {
     font-size: 11px;
     font-weight: 700;
@@ -84,6 +92,91 @@
     font-size: 14px;
     color: var(--muted);
     font-weight: 300;
+  }
+
+  /* ── Season Toggle ── */
+  .season-toggle-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    padding-top: 4px;
+  }
+
+  .season-toggle-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .season-toggle {
+    display: flex;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .season-btn {
+    background: none;
+    border: none;
+    padding: 10px 22px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .season-btn:hover { color: var(--white); }
+
+  .season-btn.active {
+    background: linear-gradient(135deg, var(--green-mid), var(--green));
+    color: var(--gold);
+    box-shadow: inset 0 1px 0 rgba(201,168,76,0.2);
+  }
+
+  .season-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 30px; height: 2px;
+    background: var(--gold);
+    border-radius: 2px 2px 0 0;
+  }
+
+  .season-badge {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 300;
+    text-align: right;
+  }
+
+  #season-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .badge-live {
+    background: rgba(94,201,94,0.15);
+    border: 1px solid rgba(94,201,94,0.35);
+    color: var(--green-score);
+  }
+
+  .badge-archived {
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
   }
 
   /* ── Tabs ── */
@@ -119,29 +212,7 @@
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
-  /* ── Upload & Search ── */
-  .upload-section {
-    margin-bottom: 24px;
-    padding: 20px;
-    border: 2px dashed rgba(201, 168, 76, 0.25);
-    border-radius: 6px;
-    text-align: center;
-  }
-  .upload-section p { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
-  input[type="file"] { display: none; }
-  .btn-upload {
-    display: inline-block;
-    background: transparent;
-    border: 1px solid rgba(201, 168, 76, 0.4);
-    color: var(--gold);
-    padding: 8px 20px;
-    font-size: 13px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-upload:hover { background: rgba(201, 168, 76, 0.1); }
-
+  /* ── Search ── */
   .search-section { margin-bottom: 40px; }
   .search-label {
     font-size: 11px;
@@ -192,20 +263,6 @@
   .btn:hover { background: var(--gold-light); }
   .btn:active { transform: scale(0.98); }
 
-  .btn-demo {
-    background: transparent;
-    border: 1px solid rgba(201, 168, 76, 0.4);
-    color: var(--gold);
-    padding: 14px 24px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-demo:hover { background: rgba(201, 168, 76, 0.1); border-color: var(--gold); }
-
   /* ── Status ── */
   #status {
     margin-bottom: 24px;
@@ -227,6 +284,11 @@
     background: rgba(184, 64, 64, 0.15);
     border: 1px solid rgba(184, 64, 64, 0.4);
     color: #e88080;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
   }
 
   /* ── Player Card ── */
@@ -293,6 +355,21 @@
     text-overflow: ellipsis;
   }
 
+  .source-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 6px 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    text-decoration: none;
+    margin-top: 4px;
+    transition: all 0.2s;
+  }
+  .source-tag:hover { color: var(--gold); border-color: rgba(201, 168, 76, 0.4); }
+
   /* ── Body panels below header ── */
   .card-body {
     background: rgba(255,255,255,0.02);
@@ -302,7 +379,6 @@
     overflow: hidden;
   }
 
-  /* Scroll wrapper for tables on small screens */
   .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
   /* ── Chart row ── */
@@ -316,9 +392,7 @@
     .charts-row { grid-template-columns: 1fr; }
   }
 
-  .chart-panel {
-    padding: 24px 28px;
-  }
+  .chart-panel { padding: 24px 28px; }
   .chart-panel + .chart-panel {
     border-left: 1px solid rgba(255,255,255,0.07);
   }
@@ -331,38 +405,6 @@
     margin-bottom: 16px;
   }
   .chart-container { position: relative; }
-
-  /* ── Insight row ── */
-  .insights-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
-  @media (max-width: 700px) {
-    .insights-row { grid-template-columns: repeat(2, 1fr); }
-  }
-  .insight-cell {
-    padding: 18px 20px;
-    border-right: 1px solid rgba(255,255,255,0.07);
-    text-align: center;
-  }
-  .insight-cell:last-child { border-right: none; }
-  .insight-val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    color: var(--white);
-    line-height: 1;
-  }
-  .insight-val.gold { color: var(--gold); }
-  .insight-val.green { color: var(--green-score); }
-  .insight-val.red   { color: var(--red-score); }
-  .insight-lbl {
-    font-size: 9px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-top: 4px;
-  }
 
   /* ── Score Table ── */
   table { width: 100%; border-collapse: collapse; }
@@ -399,12 +441,10 @@
   .score-over  { color: var(--red-score); }
   .score-even  { color: rgba(255,255,255,0.85); }
 
-  /* trend arrows */
   .trend-up   { color: var(--green-score); font-size: 11px; }
   .trend-down { color: var(--red-score);   font-size: 11px; }
   .trend-flat { color: var(--muted);       font-size: 11px; }
 
-  /* division badge */
   .div-badge {
     display: inline-block;
     padding: 2px 8px;
@@ -420,7 +460,6 @@
   .div-Orange { background: rgba(200,120,40,0.25);  color: #f0a860; }
   .div-Red    { background: rgba(200,60,60,0.25);   color: #f08080; }
 
-  /* sub marker */
   .sub-tag {
     font-size: 9px;
     letter-spacing: 1px;
@@ -432,22 +471,6 @@
     margin-left: 6px;
     vertical-align: middle;
   }
-
-  /* ── Source tag ── */
-  .source-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    color: var(--muted);
-    padding: 6px 12px;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    text-decoration: none;
-    margin-top: 4px;
-    transition: all 0.2s;
-  }
-  .source-tag:hover { color: var(--gold); border-color: rgba(201, 168, 76, 0.4); }
 
   /* ── Empty state ── */
   #empty-state {
@@ -510,7 +533,6 @@
   .lb-rank.bronze-rank { color: #CD7F32; }
   .lb-name { font-weight: 500; }
 
-  /* Sort column highlight */
   .lb-table-wrap th.sort-col {
     color: var(--white);
     background: rgba(201,168,76,0.15);
@@ -518,8 +540,6 @@
   .lb-table-wrap td.sort-col {
     background: rgba(201,168,76,0.06);
   }
-
-  /* ── Info box ── */
 
   footer {
     margin-top: 60px;
@@ -530,6 +550,7 @@
     color: var(--muted);
     font-weight: 300;
   }
+
   /* ── Hole Breakdown ── */
   .hole-section-label {
     font-size: 10px;
@@ -569,15 +590,8 @@
     letter-spacing: 1px;
     text-transform: uppercase;
   }
-  .hole-stats {
-    padding: 10px 14px;
-    display: flex;
-    gap: 16px;
-  }
-  .hole-stat {
-    text-align: center;
-    flex: 1;
-  }
+  .hole-stats { padding: 10px 14px; display: flex; gap: 16px; }
+  .hole-stat { text-align: center; flex: 1; }
   .hole-stat-val {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 20px;
@@ -590,15 +604,9 @@
     color: var(--muted);
     margin-top: 2px;
   }
-  .hole-score-row {
-    padding: 0 14px 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
+  .hole-score-row { padding: 0 14px 10px; display: flex; flex-wrap: wrap; gap: 4px; }
   .hole-score-pip {
-    width: 26px;
-    height: 26px;
+    width: 26px; height: 26px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -614,133 +622,6 @@
   .pip-double { background: rgba(224,112,112,0.3);  color: #ff6060; border-color: rgba(224,112,112,0.5); }
   .pip-worse  { background: rgba(180,60,60,0.4);    color: #ff4040; border-color: rgba(180,60,60,0.6); }
 
-  /* ════════════════════════════════════════
-     MOBILE RESPONSIVE
-  ════════════════════════════════════════ */
-  @media (max-width: 600px) {
-
-    /* Container */
-    .container { padding: 0 16px; }
-
-    /* Header */
-    header { padding: 28px 0 20px; margin-bottom: 24px; }
-
-    /* Tabs */
-    .tab { padding: 10px 14px; font-size: 12px; }
-
-    /* Search */
-    .search-section { margin-bottom: 24px; }
-    .search-row { flex-direction: column; align-items: stretch; }
-    .search-row input[type="text"] { min-width: unset; width: 100%; }
-    .search-row .btn { width: 100%; }
-
-    /* Player header — already stacks vertically, just tighten padding */
-    .player-header { padding: 18px 16px 16px; gap: 12px; }
-    .player-name { font-size: 32px; }
-
-    /* Stat chips — 4 + 3 layout on mobile */
-    .stat-chips { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .chip { padding: 7px 4px; }
-    .chip-val { font-size: 17px; }
-    .chip-lbl { font-size: 7px; letter-spacing: 0.8px; }
-
-    /* Insights row — all 3 across on mobile */
-    .insights-row { grid-template-columns: repeat(3, 1fr); }
-    .insight-cell { padding: 12px 6px; }
-    .insight-val { font-size: 16px; }
-    .insight-lbl { font-size: 8px; }
-
-    /* Charts — stack and reduce height */
-    .charts-row { grid-template-columns: 1fr; }
-    .chart-panel { padding: 16px; }
-    .chart-panel + .chart-panel { border-left: none; border-top: 1px solid rgba(255,255,255,0.07); }
-
-    /* Score table — hide less critical columns, tighten padding */
-    thead th, tbody td { padding: 10px 8px; font-size: 12px; }
-    thead th { font-size: 9px; letter-spacing: 1px; }
-
-    /* Hide Trend and vs Par columns on mobile — show most important cols */
-    table thead tr th:nth-child(7),
-    table thead tr th:nth-child(8),
-    table tbody tr td:nth-child(7),
-    table tbody tr td:nth-child(8) { display: none; }
-
-    /* Tighten the week label */
-    .td-week { font-size: 12px; }
-
-    /* Hole grid — 2 columns on mobile */
-    .hole-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .hole-card-header { padding: 6px 10px; }
-    .hole-stats { padding: 8px 10px; gap: 8px; }
-    .hole-score-row { padding: 0 10px 8px; gap: 3px; }
-    .hole-score-pip { width: 22px; height: 22px; font-size: 10px; }
-
-    /* Scoring summary pie — stack vertically */
-    #scoring-summary > div { flex-direction: column; align-items: center; padding: 20px 16px; }
-    #scoring-summary canvas { width: 180px !important; height: 180px !important; }
-    #pie-legend { grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
-
-    /* Leaderboard controls — stack */
-    .lb-controls { flex-direction: column; align-items: flex-start; gap: 8px; }
-    .lb-controls label { margin-top: 4px; }
-    .lb-controls select { width: 100%; }
-
-    /* Leaderboard table — card style on mobile */
-    .lb-table-wrap { border: none; background: transparent; }
-    .lb-table-wrap table { display: block; }
-    .lb-table-wrap thead { display: none; }
-    .lb-table-wrap tbody { display: flex; flex-direction: column; gap: 10px; }
-    .lb-table-wrap tbody tr {
-      display: grid;
-      grid-template-columns: 40px 1fr 1fr;
-      grid-template-rows: auto auto;
-      gap: 2px 8px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      padding: 14px 12px;
-      animation: rowIn 0.3s ease both;
-    }
-    .lb-table-wrap tbody tr td { padding: 0; border: none; font-size: 13px; }
-    /* Rank spans 2 rows */
-    .lb-table-wrap tbody tr td:nth-child(1) {
-      grid-column: 1; grid-row: 1 / 3;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
-    }
-    /* Name */
-    .lb-table-wrap tbody tr td:nth-child(2) {
-      grid-column: 2 / 4; grid-row: 1;
-      font-weight: 600; font-size: 14px;
-    }
-    /* Division */
-    .lb-table-wrap tbody tr td:nth-child(3) {
-      grid-column: 2; grid-row: 2;
-      display: flex; align-items: center;
-    }
-    /* Rounds — hidden, replaced by avg net */
-    .lb-table-wrap tbody tr td:nth-child(4) { display: none; }
-    /* Avg Gross — hidden on mobile */
-    .lb-table-wrap tbody tr td:nth-child(5) { display: none; }
-    /* Best Gross — hidden on mobile */
-    .lb-table-wrap tbody tr td:nth-child(6) { display: none; }
-    /* Worst Gross — hidden on mobile */
-    .lb-table-wrap tbody tr td:nth-child(7) { display: none; }
-    /* Avg Net — show as key stat */
-    .lb-table-wrap tbody tr td:nth-child(8) {
-      grid-column: 3; grid-row: 2;
-      font-weight: 600; font-size: 14px;
-      display: flex; align-items: center; justify-content: flex-end;
-    }
-    .lb-table-wrap tbody tr td:nth-child(8)::before { content: 'Avg Net: '; color: var(--muted); font-weight: 300; font-size: 11px; margin-right: 3px; }
-    /* Best Net — hidden on mobile */
-    .lb-table-wrap tbody tr td:nth-child(9)  { display: none; }
-    /* Worst Net — hidden on mobile */
-    .lb-table-wrap tbody tr td:nth-child(10) { display: none; }
-
-    /* Footer */
-    footer { font-size: 11px; margin-top: 40px; }
-  }
   /* ── Round Scorecards ── */
   .scorecard-week {
     margin-bottom: 20px;
@@ -765,11 +646,7 @@
     letter-spacing: 1.5px;
     color: var(--white);
   }
-  .scorecard-week-totals {
-    display: flex;
-    gap: 16px;
-    font-size: 13px;
-  }
+  .scorecard-week-totals { display: flex; gap: 16px; font-size: 13px; }
   .scorecard-week-totals span { color: var(--muted); }
   .scorecard-week-totals strong { color: var(--gold); margin-left: 4px; }
   .scorecard-grid {
@@ -791,56 +668,132 @@
     color: var(--muted);
     margin-bottom: 4px;
   }
-  .scorecard-hole-par {
-    font-size: 10px;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
+  .scorecard-hole-par { font-size: 10px; color: var(--muted); margin-bottom: 6px; }
   .scorecard-hole-score {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 28px;
     line-height: 1;
     color: var(--white);
   }
-  .scorecard-hole-diff {
-    font-size: 10px;
-    margin-top: 3px;
-    font-weight: 600;
-  }
-  /* score colors match pip classes */
+  .scorecard-hole-diff { font-size: 10px; margin-top: 3px; font-weight: 600; }
   .sc-eagle  { color: #FFD700; }
   .sc-birdie { color: #4a90d9; }
   .sc-par    { color: #5ec95e; }
   .sc-bogey  { color: var(--red-score); }
   .sc-double { color: #ff6060; }
   .sc-worse  { color: #ff3030; }
-  .sc-no-data { color: var(--muted); font-size: 18px; }
 
+  /* ── Archived banner ── */
+  .archived-banner {
+    display: none;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 6px;
+    padding: 12px 18px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .archived-banner.hidden { display: none !important; }
+
+  /* ── MOBILE ── */
   @media (max-width: 600px) {
+    .container { padding: 0 16px; }
+    header { padding: 28px 0 20px; margin-bottom: 24px; }
+    .header-top { flex-direction: column; }
+    .season-toggle-wrap { align-items: flex-start; }
+    .tab { padding: 10px 14px; font-size: 12px; }
+    .search-section { margin-bottom: 24px; }
+    .search-row { flex-direction: column; align-items: stretch; }
+    .search-row input[type="text"] { min-width: unset; width: 100%; }
+    .search-row .btn { width: 100%; }
+    .player-header { padding: 18px 16px 16px; gap: 12px; }
+    .player-name { font-size: 32px; }
+    .stat-chips { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .chip { padding: 7px 4px; }
+    .chip-val { font-size: 17px; }
+    .chip-lbl { font-size: 7px; letter-spacing: 0.8px; }
+    .charts-row { grid-template-columns: 1fr; }
+    .chart-panel { padding: 16px; }
+    .chart-panel + .chart-panel { border-left: none; border-top: 1px solid rgba(255,255,255,0.07); }
+    thead th, tbody td { padding: 10px 8px; font-size: 12px; }
+    thead th { font-size: 9px; letter-spacing: 1px; }
+    table thead tr th:nth-child(7),
+    table thead tr th:nth-child(8),
+    table tbody tr td:nth-child(7),
+    table tbody tr td:nth-child(8) { display: none; }
+    .hole-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .scorecard-grid { grid-template-columns: repeat(5, 1fr); }
     .scorecard-hole-score { font-size: 22px; }
-    .scorecard-week-header { padding: 10px 14px; }
+    .lb-controls { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .lb-controls label { margin-top: 4px; }
+    .lb-controls select { width: 100%; }
+    .lb-table-wrap { border: none; background: transparent; }
+    .lb-table-wrap table { display: block; }
+    .lb-table-wrap thead { display: none; }
+    .lb-table-wrap tbody { display: flex; flex-direction: column; gap: 10px; }
+    .lb-table-wrap tbody tr {
+      display: grid;
+      grid-template-columns: 40px 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 2px 8px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 14px 12px;
+    }
+    .lb-table-wrap tbody tr td { padding: 0; border: none; font-size: 13px; }
+    .lb-table-wrap tbody tr td:nth-child(1) { grid-column: 1; grid-row: 1/3; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+    .lb-table-wrap tbody tr td:nth-child(2) { grid-column: 2/4; grid-row: 1; font-weight: 600; font-size: 14px; }
+    .lb-table-wrap tbody tr td:nth-child(3) { grid-column: 2; grid-row: 2; display: flex; align-items: center; }
+    .lb-table-wrap tbody tr td:nth-child(4) { display: none; }
+    .lb-table-wrap tbody tr td:nth-child(5) { display: none; }
+    .lb-table-wrap tbody tr td:nth-child(6) { display: none; }
+    .lb-table-wrap tbody tr td:nth-child(7) { display: none; }
+    .lb-table-wrap tbody tr td:nth-child(8) { grid-column: 3; grid-row: 2; font-weight: 600; font-size: 14px; display: flex; align-items: center; justify-content: flex-end; }
+    .lb-table-wrap tbody tr td:nth-child(8)::before { content: 'Avg Net: '; color: var(--muted); font-weight: 300; font-size: 11px; margin-right: 3px; }
+    .lb-table-wrap tbody tr td:nth-child(9)  { display: none; }
+    .lb-table-wrap tbody tr td:nth-child(10) { display: none; }
+    footer { font-size: 11px; margin-top: 40px; }
   }
-
 </style>
 </head>
 <body>
 <div class="container">
 
   <header>
-    <div class="league-label">⛳ 2025 Season</div>
-    <h1>Thursday Night<br><span>Men's League</span></h1>
-    <div class="header-sub">Player Score History — Spencer Country Club</div>
+    <div class="header-top">
+      <div>
+        <div class="league-label" id="header-season-label">⛳ 2026 Season</div>
+        <h1>Thursday Night<br><span>Men's League</span></h1>
+        <div class="header-sub">Player Score History — Spencer Country Club</div>
+      </div>
+      <div class="season-toggle-wrap">
+        <div class="season-toggle-label">Season</div>
+        <div class="season-toggle">
+          <button class="season-btn active" id="btn-2026" onclick="switchSeason('2026')">2026</button>
+          <button class="season-btn" id="btn-2025" onclick="switchSeason('2025')">2025</button>
+        </div>
+        <div class="season-badge">
+          <span id="season-status-badge" class="badge-live">● Live</span>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <!-- Tabs -->
   <div class="tabs">
     <button class="tab active" onclick="switchTab('player')">Player Stats</button>
     <button class="tab" onclick="switchTab('leaderboard')">Leaderboard</button>
   </div>
 
-  <!-- ════ PLAYER TAB ════ -->
   <div id="tab-player" class="tab-panel active">
+
+    <div class="archived-banner hidden" id="archived-banner">
+      📁 You're viewing the <strong>2025 archived season</strong>. These scores are final and read-only. Switch to 2026 to see the live season.
+    </div>
 
     <div class="search-section">
       <span class="search-label">Search Player</span>
@@ -852,13 +805,12 @@
 
     <div id="status"></div>
 
-    <!-- Player Card -->
     <div id="player-card">
       <div class="player-header">
         <div class="player-header-left">
           <div class="player-name" id="card-name"></div>
           <div class="player-meta" id="card-meta"></div>
-          <a href="https://www.golfgenius.com/pages/11625213179092549884" target="_blank" class="source-tag">
+          <a id="source-link" href="#" target="_blank" class="source-tag">
             🔗 GolfGenius Source
           </a>
         </div>
@@ -866,8 +818,6 @@
       </div>
 
       <div class="card-body">
-
-        <!-- Charts -->
         <div class="charts-row">
           <div class="chart-panel">
             <div class="chart-title">Score Trend — Gross &amp; Net by Week</div>
@@ -883,7 +833,6 @@
           </div>
         </div>
 
-        <!-- Score table -->
         <div class="table-scroll">
         <table>
           <thead>
@@ -904,7 +853,6 @@
       </div>
     </div>
 
-    <!-- Hole Breakdown -->
     <div id="hole-breakdown" style="display:none; margin-bottom:40px;">
       <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:var(--gold); margin-bottom:16px;">
         Hole-by-Hole Breakdown
@@ -912,7 +860,6 @@
       <div id="hole-breakdown-body"></div>
     </div>
 
-    <!-- Scoring Summary Pie -->
     <div id="scoring-summary" style="display:none; margin-bottom:48px;">
       <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:var(--gold); margin-bottom:16px;">
         Scoring Summary — All Holes
@@ -925,7 +872,6 @@
       </div>
     </div>
 
-    <!-- Round Scorecards -->
     <div id="scorecards-section" style="display:none; margin-bottom:48px;">
       <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:var(--gold); margin-bottom:16px;">
         Round Scorecards
@@ -933,17 +879,13 @@
       <div id="scorecards-body"></div>
     </div>
 
-    <!-- Empty state -->
     <div id="empty-state">
       <div class="empty-icon">🏌️</div>
       <div class="empty-title">Search for a Player</div>
-      <div class="empty-sub">Enter a name above or load your scraped JSON to see score history</div>
+      <div class="empty-sub" id="empty-sub-text">Enter a name above to see 2026 score history</div>
     </div>
 
-  </div><!-- /tab-player -->
-
-  <!-- ════ LEADERBOARD TAB ════ -->
-  <div id="tab-leaderboard" class="tab-panel">
+  </div><div id="tab-leaderboard" class="tab-panel">
     <div id="leaderboard-section">
       <div class="lb-controls">
         <label>Division</label>
@@ -963,11 +905,11 @@
           <option value="avg_net">Avg Net Score</option>
           <option value="best_net">Best Net Round</option>
         </select>
-        <label>Min rounds</label>
+<label>Min rounds</label>
         <select id="lb-min-rounds" onchange="renderLeaderboard()">
-          <option value="1">1+</option>
+          <option value="1" selected>1+</option>
           <option value="3">3+</option>
-          <option value="5" selected>5+</option>
+          <option value="5">5+</option>
           <option value="8">8+</option>
         </select>
       </div>
@@ -994,20 +936,138 @@
     <div id="lb-empty" style="text-align:center; padding:80px 24px; color:var(--muted)">
       <div class="empty-icon">🏆</div>
       <div class="empty-title">No Data Loaded</div>
-      <div class="empty-sub">Load your all_results.json on the Player Stats tab first</div>
+      <div class="empty-sub">Search for a player on the Player Stats tab first</div>
     </div>
-  </div><!-- /tab-leaderboard -->
-
-  <footer>
-    2025 Thursday Night Men's League &nbsp;·&nbsp; Data sourced from GolfGenius &nbsp;·&nbsp; Spencer Country Club
+  </div><footer id="footer-text">
+    2026 Thursday Night Men's League &nbsp;·&nbsp; Data sourced from GolfGenius &nbsp;·&nbsp; Spencer Country Club
   </footer>
-</div><!-- /container -->
+</div><script>
+// ── Season config ─────────────────────────────────────────────────────────────
+const SEASONS = {
+  '2026': {
+    jsonFile:   'all_results_2026.json',
+    sourceUrl:  'https://sgacc-2026thursdaynightmensleague.golfgenius.com/pages/12655319202865889493',
+    label:      '⛳ 2026 Season',
+    archived:   false,
+    footerText: '2026 Thursday Night Men\'s League &nbsp;·&nbsp; Data sourced from GolfGenius &nbsp;·&nbsp; Spencer Country Club',
+  },
+  '2025': {
+    jsonFile:   'all_results.json',
+    sourceUrl:  'https://www.golfgenius.com/pages/11625213179092549884',
+    label:      '⛳ 2025 Season',
+    archived:   true,
+    footerText: '2025 Thursday Night Men\'s League (Archived) &nbsp;·&nbsp; Spencer Country Club',
+  }
+};
 
-<script>
-let allData = [];
+let currentSeason = '2026';
+let dataCache = {};        // keyed by season
 let trendChart = null;
 let distChart  = null;
 let pieChart   = null;
+
+// ── Season switching ──────────────────────────────────────────────────────────
+async function switchSeason(season) {
+  if (season === currentSeason) return;
+  currentSeason = season;
+
+  // Toggle buttons
+  document.getElementById('btn-2026').classList.toggle('active', season === '2026');
+  document.getElementById('btn-2025').classList.toggle('active', season === '2025');
+
+  const cfg = SEASONS[season];
+
+  // Update header label
+  document.getElementById('header-season-label').textContent = cfg.label;
+
+  // Update archived banner
+  const banner = document.getElementById('archived-banner');
+  if (cfg.archived) {
+    banner.classList.remove('hidden');
+  } else {
+    banner.classList.add('hidden');
+  }
+
+  // Update status badge
+  const badge = document.getElementById('season-status-badge');
+  if (cfg.archived) {
+    badge.className = 'badge-archived';
+    badge.textContent = '📁 Archived';
+  } else {
+    badge.className = 'badge-live';
+    badge.textContent = '● Live';
+  }
+
+  // Update footer
+  document.getElementById('footer-text').innerHTML = cfg.footerText;
+
+  // Update empty state hint
+  document.getElementById('empty-sub-text').textContent =
+    `Enter a name above to see ${season} score history`;
+
+  // Load data for this season (waits for JSON fetch if not cached)
+  await loadData(season);
+
+  // SMOOTH TRANSITION LOGIC
+  if (document.getElementById('tab-leaderboard').classList.contains('active')) {
+    // If the user is looking at the leaderboard, immediately redraw it with new season data
+    renderLeaderboard();
+  } else {
+    // If the user is on the Player Stats tab, check if they already searched someone
+    const currentSearch = document.getElementById('player-input').value.trim();
+    if (currentSearch) {
+      // Re-trigger search for the same person in the new year
+      searchPlayer();
+    } else {
+      // No one searched yet, just show the empty state cleanly
+      document.getElementById('player-card').style.display = 'none';
+      document.getElementById('hole-breakdown').style.display = 'none';
+      document.getElementById('scoring-summary').style.display = 'none';
+      document.getElementById('scorecards-section').style.display = 'none';
+      document.getElementById('status').style.display = 'none';
+      document.getElementById('empty-state').style.display = 'block';
+    }
+  }
+}
+
+// ── Auto-fetch JSON ───────────────────────────────────────────────────────────
+async function loadData(season) {
+  // Return cached data instantly
+  if (dataCache[season]) {
+    updateLoadedStatus(season, dataCache[season]);
+    return dataCache[season];
+  }
+
+  const cfg = SEASONS[season];
+  showStatus('loading', '<div style="width:12px;height:12px;border:2px solid rgba(201,168,76,0.3);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0"></div> Loading ' + season + ' league data...');
+
+  try {
+    const resp = await fetch(cfg.jsonFile);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const parsed = await resp.json();
+    const results = parsed.results || parsed;
+    dataCache[season] = results;
+    updateLoadedStatus(season, results, parsed.generated_at);
+    return results;
+  } catch(err) {
+    showStatus('error', `⚠ Could not load ${cfg.jsonFile} — make sure it's in the same folder as this HTML file.`);
+    return [];
+  }
+}
+
+function updateLoadedStatus(season, results, generatedAt) {
+  if (currentSeason !== season) return; // stale, ignore
+  const updatedAt = generatedAt
+    ? new Date(generatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    : null;
+  showStatus('loading', `✓ ${results.length} records loaded — ${season} season${updatedAt ? ' · Updated ' + updatedAt : ''}`);
+  setTimeout(() => {
+    if (currentSeason === season) document.getElementById('status').style.display = 'none';
+  }, 3000);
+}
+
+// Load 2026 on startup
+loadData('2026');
 
 // ── Tab switching ─────────────────────────────────────────────────────────────
 function switchTab(name) {
@@ -1019,41 +1079,29 @@ function switchTab(name) {
   if (name === 'leaderboard') renderLeaderboard();
 }
 
-// ── Auto-fetch JSON on page load ──────────────────────────────────────────────
-async function loadData() {
-  try {
-    showStatus('loading', '<div style="width:12px;height:12px;border:2px solid rgba(201,168,76,0.3);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0"></div> Loading league data...');
-    const resp = await fetch('all_results.json');
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const parsed = await resp.json();
-    allData = parsed.results || parsed;
-    const updatedAt = parsed.generated_at
-      ? new Date(parsed.generated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-      : null;
-    showStatus('loading', `✓ ${allData.length} records loaded${updatedAt ? ' · Updated ' + updatedAt : ''}`);
-    setTimeout(() => document.getElementById('status').style.display = 'none', 3000);
-  } catch(err) {
-    showStatus('error', '⚠ Could not load all_results.json — make sure it\'s in the same folder as this HTML file.');
-  }
-}
-loadData();
-
 // ── Search ────────────────────────────────────────────────────────────────────
 function searchPlayer() {
   const name = document.getElementById('player-input').value.trim();
   if (!name) return;
+
+  const allData = dataCache[currentSeason] || [];
   if (allData.length === 0) {
     showStatus('error', 'Data is still loading — please wait a moment and try again.');
     return;
   }
 
   const matches = allData.filter(r =>
-    r.player && r.player.toLowerCase().includes(name.toLowerCase())
+    r.player && 
+    r.player.toLowerCase().includes(name.toLowerCase()) &&
+    !r.player.toLowerCase().includes('ghost') // Also ignore ghosts in manual searches
   );
 
   if (matches.length === 0) {
-    showStatus('error', `No results for "${name}".`);
+    showStatus('error', `No results for "${name}" in the ${currentSeason} season.`);
     document.getElementById('player-card').style.display = 'none';
+    document.getElementById('hole-breakdown').style.display = 'none';
+    document.getElementById('scoring-summary').style.display = 'none';
+    document.getElementById('scorecards-section').style.display = 'none';
     document.getElementById('empty-state').style.display = 'block';
     return;
   }
@@ -1071,28 +1119,25 @@ function renderPlayer(searchName, records) {
   const card = document.getElementById('player-card');
   card.style.display = 'block';
 
-  // Sort by week number numerically (lexical sort puts Week 10 before Week 2)
   const weekNum = w => parseInt((w.week || '').match(/\d+/) || [0]);
   records = [...records].sort((a, b) => weekNum(a) - weekNum(b));
 
   const name = records[0].player || searchName;
   document.getElementById('card-name').textContent = name;
 
-  // Detect which weeks this player was a sub (division differs from their usual one)
+  // Update source link for current season
+  const cfg = SEASONS[currentSeason];
+  document.getElementById('source-link').href = cfg.sourceUrl;
+
   const divCount = {};
   records.forEach(r => divCount[r.division] = (divCount[r.division]||0)+1);
   const primaryDiv = Object.entries(divCount).sort((a,b)=>b[1]-a[1])[0][0];
 
-  const nets   = records.map(r => parseFloat(r.net)).filter(n => !isNaN(n));
-  const grosses= records.map(r => parseFloat(r.gross)).filter(n => !isNaN(n));
-  const avg    = arr => arr.length ? (arr.reduce((a,b)=>a+b,0)/arr.length) : null;
-  const best   = arr => arr.length ? Math.min(...arr) : null;
-  const worst  = arr => arr.length ? Math.max(...arr) : null;
-  const stddev = arr => {
-    if (arr.length < 2) return null;
-    const m = avg(arr);
-    return Math.sqrt(arr.reduce((s,v)=>s+Math.pow(v-m,2),0)/arr.length);
-  };
+  const nets    = records.map(r => parseFloat(r.net)).filter(n => !isNaN(n));
+  const grosses = records.map(r => parseFloat(r.gross)).filter(n => !isNaN(n));
+  const avg     = arr => arr.length ? (arr.reduce((a,b)=>a+b,0)/arr.length) : null;
+  const best    = arr => arr.length ? Math.min(...arr) : null;
+  const worst   = arr => arr.length ? Math.max(...arr) : null;
 
   const avgNet    = avg(nets);
   const avgGross  = avg(grosses);
@@ -1102,32 +1147,25 @@ function renderPlayer(searchName, records) {
   const worstGross= worst(grosses);
 
   document.getElementById('card-meta').textContent =
-    `${records.length} round${records.length!==1?'s':''} · Primary division: ${primaryDiv}`;
+    `${records.length} round${records.length!==1?'s':''} · Primary division: ${primaryDiv} · ${currentSeason} Season`;
 
-  // ── Stat chips — all 7 in order ──
   const PAR9 = 36;
   const chipsEl = document.getElementById('stat-chips');
   chipsEl.innerHTML = [
-    { val: avgGross  ? avgGross.toFixed(1)  : '—',   lbl: 'Avg Gross',   cls: '' },
-    { val: bestGross !== null ? bestGross   : '—',   lbl: 'Best Gross',  cls: 'good' },
-    { val: worstGross!== null ? worstGross  : '—',   lbl: 'Worst Gross', cls: 'bad' },
-    { val: avgNet    ? avgNet.toFixed(1)    : '—',   lbl: 'Avg Net',     cls: avgNet<PAR9?'good':avgNet>PAR9?'bad':'' },
-    { val: bestNet   !== null ? bestNet     : '—',   lbl: 'Best Net',    cls: 'good' },
-    { val: worstNet  !== null ? worstNet    : '—',   lbl: 'Worst Net',   cls: 'bad' },
+    { val: avgGross   ? avgGross.toFixed(1)   : '—', lbl: 'Avg Gross',   cls: '' },
+    { val: bestGross  !== null ? bestGross     : '—', lbl: 'Best Gross',  cls: 'good' },
+    { val: worstGross !== null ? worstGross    : '—', lbl: 'Worst Gross', cls: 'bad' },
+    { val: avgNet     ? avgNet.toFixed(1)     : '—', lbl: 'Avg Net',     cls: avgNet<PAR9?'good':avgNet>PAR9?'bad':'' },
+    { val: bestNet    !== null ? bestNet       : '—', lbl: 'Best Net',    cls: 'good' },
+    { val: worstNet   !== null ? worstNet      : '—', lbl: 'Worst Net',   cls: 'bad' },
   ].map(c => `<div class="chip">
     <div class="chip-val ${c.cls}">${c.val}</div>
     <div class="chip-lbl">${c.lbl}</div>
   </div>`).join('');
 
-  // ── Insight row — now empty, kept for DOM compatibility ──
-  const insightsEl = document.getElementById('insights-row');
-  if (insightsEl) insightsEl.style.display = 'none';
-
-  // ── Charts ──
   renderTrendChart(records);
   renderDistChart(grosses);
 
-  // ── Table ──
   const tbody = document.getElementById('results-tbody');
   tbody.innerHTML = '';
   records.forEach((r, i) => {
@@ -1141,7 +1179,6 @@ function renderPlayer(searchName, records) {
       else if (net > PAR9) scoreClass = 'score-over';
     }
 
-    // vs par based on gross
     const vsPar = !isNaN(gross) ? (gross - PAR9) : null;
     const vsParStr = vsPar !== null
       ? (vsPar === 0 ? 'E' : (vsPar > 0 ? '+'+vsPar : vsPar))
@@ -1150,7 +1187,6 @@ function renderPlayer(searchName, records) {
       ? (vsPar < 0 ? 'score-under' : vsPar > 0 ? 'score-over' : 'score-even')
       : '';
 
-    // trend arrow based on gross
     let trendHtml = '<span class="trend-flat">—</span>';
     if (prevGross !== null && !isNaN(gross)) {
       const diff = gross - prevGross;
@@ -1159,11 +1195,8 @@ function renderPlayer(searchName, records) {
       else               trendHtml = `<span class="trend-flat">= 0</span>`;
     }
 
-    // sub tag
     const isSub = r.division !== primaryDiv;
     const subTag = isSub ? '<span class="sub-tag">Sub</span>' : '';
-
-    // division badge
     const divClass = 'div-' + (r.division || 'Black');
 
     const tr = document.createElement('tr');
@@ -1181,15 +1214,14 @@ function renderPlayer(searchName, records) {
     tbody.appendChild(tr);
   });
 
-  // ── Hole breakdown ──
   renderHoleBreakdown(records);
 }
 
 // ── Trend chart ───────────────────────────────────────────────────────────────
 function renderTrendChart(records) {
-  const labels = records.map(r => r.week.replace(/Week\s+/, 'Wk ').split('(')[0].trim());
+  const labels    = records.map(r => r.week.replace(/Week\s+/, 'Wk ').split('(')[0].trim());
   const grossData = records.map(r => parseFloat(r.gross) || null);
-  const netData   = records.map(r => parseFloat(r.net)   || null);
+  const netData   = records.map(r => parseFloat(r.net)  || null);
 
   if (trendChart) trendChart.destroy();
   const ctx = document.getElementById('trend-chart').getContext('2d');
@@ -1198,63 +1230,20 @@ function renderTrendChart(records) {
     data: {
       labels,
       datasets: [
-        {
-          label: 'Gross',
-          data: grossData,
-          borderColor: 'rgba(201,168,76,0.7)',
-          backgroundColor: 'rgba(201,168,76,0.08)',
-          borderWidth: 2,
-          pointBackgroundColor: 'rgba(201,168,76,0.9)',
-          pointRadius: 4,
-          tension: 0.3,
-          fill: false,
-        },
-        {
-          label: 'Net',
-          data: netData,
-          borderColor: 'rgba(94,201,94,0.9)',
-          backgroundColor: 'rgba(94,201,94,0.08)',
-          borderWidth: 2,
-          pointBackgroundColor: 'rgba(94,201,94,1)',
-          pointRadius: 4,
-          tension: 0.3,
-          fill: false,
-        },
+        { label: 'Gross', data: grossData, borderColor: 'rgba(201,168,76,0.7)', backgroundColor: 'rgba(201,168,76,0.08)', borderWidth: 2, pointBackgroundColor: 'rgba(201,168,76,0.9)', pointRadius: 4, tension: 0.3, fill: false },
+        { label: 'Net',   data: netData,   borderColor: 'rgba(94,201,94,0.9)',  backgroundColor: 'rgba(94,201,94,0.08)',  borderWidth: 2, pointBackgroundColor: 'rgba(94,201,94,1)',    pointRadius: 4, tension: 0.3, fill: false },
       ]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: {
-          labels: {
-            color: 'rgba(255,255,255,0.5)',
-            font: { size: 11 },
-            boxWidth: 12,
-          }
-        },
-        tooltip: {
-          backgroundColor: 'rgba(14,31,14,0.95)',
-          borderColor: 'rgba(201,168,76,0.4)',
-          borderWidth: 1,
-          titleColor: '#c9a84c',
-          bodyColor: '#fff',
-        }
+        legend: { labels: { color: 'rgba(255,255,255,0.5)', font: { size: 11 }, boxWidth: 12 } },
+        tooltip: { backgroundColor: 'rgba(14,31,14,0.95)', borderColor: 'rgba(201,168,76,0.4)', borderWidth: 1, titleColor: '#c9a84c', bodyColor: '#fff' }
       },
       scales: {
-        x: {
-          ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } },
-          grid:  { color: 'rgba(255,255,255,0.05)' }
-        },
-        y: {
-          ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } },
-          grid:  { color: 'rgba(255,255,255,0.05)' },
-          // annotation line at par (36)
-          afterDataLimits(axis) {
-            axis.min = Math.min(axis.min, 34);
-            axis.max = Math.max(axis.max, 38);
-          }
-        }
+        x: { ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        y: { ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' },
+              afterDataLimits(axis) { axis.min = Math.min(axis.min, 34); axis.max = Math.max(axis.max, 38); } }
       }
     }
   });
@@ -1262,7 +1251,6 @@ function renderTrendChart(records) {
 
 // ── Distribution chart ────────────────────────────────────────────────────────
 function renderDistChart(grosses) {
-  // Bucket gross scores into ranges (gross runs higher than net)
   const buckets = { '≤36': 0, '37-39': 0, '40-42': 0, '43-45': 0, '46-48': 0, '49-51': 0, '52+': 0 };
   grosses.forEach(g => {
     if      (g <= 36) buckets['≤36']++;
@@ -1273,45 +1261,18 @@ function renderDistChart(grosses) {
     else if (g <= 51) buckets['49-51']++;
     else              buckets['52+']++;
   });
-
-  const colors = [
-    'rgba(94,201,94,0.8)',
-    'rgba(94,201,94,0.6)',
-    'rgba(94,201,94,0.4)',
-    'rgba(201,168,76,0.8)',
-    'rgba(224,112,112,0.4)',
-    'rgba(224,112,112,0.6)',
-    'rgba(224,112,112,0.8)',
-  ];
-
+  const colors = ['rgba(94,201,94,0.8)','rgba(94,201,94,0.6)','rgba(94,201,94,0.4)','rgba(201,168,76,0.8)','rgba(224,112,112,0.4)','rgba(224,112,112,0.6)','rgba(224,112,112,0.8)'];
   if (distChart) distChart.destroy();
   const ctx = document.getElementById('dist-chart').getContext('2d');
   distChart = new Chart(ctx, {
     type: 'bar',
-    data: {
-      labels: Object.keys(buckets),
-      datasets: [{
-        data: Object.values(buckets),
-        backgroundColor: colors,
-        borderRadius: 3,
-        borderSkipped: false,
-      }]
-    },
+    data: { labels: Object.keys(buckets), datasets: [{ data: Object.values(buckets), backgroundColor: colors, borderRadius: 3, borderSkipped: false }] },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: {
-          backgroundColor: 'rgba(14,31,14,0.95)',
-          borderColor: 'rgba(201,168,76,0.4)',
-          borderWidth: 1,
-          titleColor: '#c9a84c',
-          bodyColor: '#fff',
-          callbacks: {
-            label: ctx => ` ${ctx.raw} round${ctx.raw!==1?'s':''}`
-          }
-        }
+        tooltip: { backgroundColor: 'rgba(14,31,14,0.95)', borderColor: 'rgba(201,168,76,0.4)', borderWidth: 1, titleColor: '#c9a84c', bodyColor: '#fff',
+                   callbacks: { label: ctx => ` ${ctx.raw} round${ctx.raw!==1?'s':''}` } }
       },
       scales: {
         x: { ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } }, grid: { display: false } },
@@ -1325,10 +1286,7 @@ function renderDistChart(grosses) {
 function renderHoleBreakdown(records) {
   const section = document.getElementById('hole-breakdown');
   const body    = document.getElementById('hole-breakdown-body');
-
-  // Collect all hole scores across all rounds
-  // holes are stored as {"10":4,"11":5,...} etc (back nine) or {"1":4,...} (front nine)
-  const holeData = {}; // hole number -> array of scores
+  const holeData = {};
 
   records.forEach(r => {
     if (!r.holes || typeof r.holes !== 'object') return;
@@ -1340,19 +1298,12 @@ function renderHoleBreakdown(records) {
   });
 
   const holeNums = Object.keys(holeData).map(Number).sort((a,b) => a-b);
-  if (holeNums.length === 0) {
-    section.style.display = 'none';
-    return;
-  }
-
+  if (holeNums.length === 0) { section.style.display = 'none'; return; }
   section.style.display = 'block';
 
-  // Group into front (1-9) and back (10-18)
   const front = holeNums.filter(h => h <= 9);
   const back  = holeNums.filter(h => h >= 10);
 
-  // Standard par values for Saukcentre back nine (holes 10-18)
-  // Without knowing exact pars, use 4 as default — can be adjusted
   const PAR_LOOKUP = {
     1:4, 2:5, 3:4, 4:4, 5:3, 6:5, 7:4, 8:4, 9:3,
     10:4, 11:5, 12:4, 13:3, 14:5, 15:4, 16:4, 17:3, 18:4
@@ -1371,54 +1322,34 @@ function renderHoleBreakdown(records) {
   function buildHoleCard(holeNum) {
     const scores = holeData[holeNum];
     const par    = PAR_LOOKUP[holeNum] || 4;
-    const avg    = (scores.reduce((s,e) => s+e.score, 0) / scores.length).toFixed(1);
+    const avgVal = (scores.reduce((s,e) => s+e.score, 0) / scores.length).toFixed(1);
     const best   = Math.min(...scores.map(e => e.score));
     const worst  = Math.max(...scores.map(e => e.score));
-    const avgVsPar = (parseFloat(avg) - par);
+    const avgVsPar = (parseFloat(avgVal) - par);
     const avgClass = avgVsPar < 0 ? 'var(--green-score)' : avgVsPar > 0 ? 'var(--red-score)' : 'var(--gold)';
     const avgStr   = avgVsPar === 0 ? 'E' : (avgVsPar > 0 ? '+' : '') + avgVsPar.toFixed(1);
-
     const pips = scores.map(e =>
       `<div class="hole-score-pip ${pipClass(e.score, par)}" title="${e.week}">${e.score}</div>`
     ).join('');
-
-    return `
-      <div class="hole-card">
-        <div class="hole-card-header">
-          <span class="hole-number">Hole ${holeNum}</span>
-          <span class="hole-played">${scores.length} round${scores.length!==1?'s':''} · Par ${par}</span>
-        </div>
-        <div class="hole-stats">
-          <div class="hole-stat">
-            <div class="hole-stat-val" style="color:${avgClass}">${avg}</div>
-            <div class="hole-stat-lbl">Avg (${avgStr})</div>
-          </div>
-          <div class="hole-stat">
-            <div class="hole-stat-val" style="color:var(--green-score)">${best}</div>
-            <div class="hole-stat-lbl">Best</div>
-          </div>
-          <div class="hole-stat">
-            <div class="hole-stat-val" style="color:var(--red-score)">${worst}</div>
-            <div class="hole-stat-lbl">Worst</div>
-          </div>
-        </div>
-        <div class="hole-score-row">${pips}</div>
-      </div>`;
+    return `<div class="hole-card">
+      <div class="hole-card-header">
+        <span class="hole-number">Hole ${holeNum}</span>
+        <span class="hole-played">${scores.length} round${scores.length!==1?'s':''} · Par ${par}</span>
+      </div>
+      <div class="hole-stats">
+        <div class="hole-stat"><div class="hole-stat-val" style="color:${avgClass}">${avgVal}</div><div class="hole-stat-lbl">Avg (${avgStr})</div></div>
+        <div class="hole-stat"><div class="hole-stat-val" style="color:var(--green-score)">${best}</div><div class="hole-stat-lbl">Best</div></div>
+        <div class="hole-stat"><div class="hole-stat-val" style="color:var(--red-score)">${worst}</div><div class="hole-stat-lbl">Worst</div></div>
+      </div>
+      <div class="hole-score-row">${pips}</div>
+    </div>`;
   }
 
   let html = '';
-  if (front.length > 0) {
-    html += `<div class="hole-section-label">Front Nine</div>
-             <div class="hole-grid">${front.map(buildHoleCard).join('')}</div>`;
-  }
-  if (back.length > 0) {
-    html += `<div class="hole-section-label">Back Nine</div>
-             <div class="hole-grid">${back.map(buildHoleCard).join('')}</div>`;
-  }
-
+  if (front.length > 0) html += `<div class="hole-section-label">Front Nine</div><div class="hole-grid">${front.map(buildHoleCard).join('')}</div>`;
+  if (back.length  > 0) html += `<div class="hole-section-label">Back Nine</div><div class="hole-grid">${back.map(buildHoleCard).join('')}</div>`;
   body.innerHTML = html;
 
-  // Build scoring summary from same hole data
   renderScoringPie(holeData);
   renderScorecards(records);
 }
@@ -1426,12 +1357,7 @@ function renderHoleBreakdown(records) {
 // ── Scoring summary pie ───────────────────────────────────────────────────────
 function renderScoringPie(holeData) {
   const section = document.getElementById('scoring-summary');
-
-  const PAR_LOOKUP = {
-    1:4, 2:5, 3:4, 4:4, 5:3, 6:5, 7:4, 8:4, 9:3,
-    10:4, 11:5, 12:4, 13:3, 14:5, 15:4, 16:4, 17:3, 18:4
-  };
-
+  const PAR_LOOKUP = { 1:4, 2:5, 3:4, 4:4, 5:3, 6:5, 7:4, 8:4, 9:3, 10:4, 11:5, 12:4, 13:3, 14:5, 15:4, 16:4, 17:3, 18:4 };
   const counts = { eagle: 0, birdie: 0, par: 0, bogey: 0, double: 0, triple: 0 };
 
   Object.entries(holeData).forEach(([hole, scores]) => {
@@ -1460,65 +1386,36 @@ function renderScoringPie(holeData) {
   const ctx = document.getElementById('pie-chart').getContext('2d');
   pieChart = new Chart(ctx, {
     type: 'doughnut',
-    data: {
-      labels,
-      datasets: [{
-        data: values,
-        backgroundColor: colors,
-        borderColor: borders,
-        borderWidth: 2,
-        hoverOffset: 8,
-      }]
-    },
+    data: { labels, datasets: [{ data: values, backgroundColor: colors, borderColor: borders, borderWidth: 2, hoverOffset: 8 }] },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '60%',
+      responsive: true, maintainAspectRatio: false, cutout: '60%',
       plugins: {
         legend: { display: false },
-        tooltip: {
-          backgroundColor: 'rgba(14,31,14,0.95)',
-          borderColor: 'rgba(201,168,76,0.4)',
-          borderWidth: 1,
-          titleColor: '#c9a84c',
-          bodyColor: '#fff',
-          callbacks: {
-            label: ctx => {
-              const pct = ((ctx.raw / total) * 100).toFixed(1);
-              return `  ${ctx.raw} holes (${pct}%)`;
-            }
-          }
-        }
+        tooltip: { backgroundColor: 'rgba(14,31,14,0.95)', borderColor: 'rgba(201,168,76,0.4)', borderWidth: 1, titleColor: '#c9a84c', bodyColor: '#fff',
+                   callbacks: { label: ctx => { const pct = ((ctx.raw / total) * 100).toFixed(1); return `  ${ctx.raw} holes (${pct}%)`; } } }
       }
     }
   });
 
-  // Custom legend
   const legend = document.getElementById('pie-legend');
   legend.innerHTML = labels.map((lbl, i) => {
     const pct = ((values[i] / total) * 100).toFixed(1);
-    return `
-      <div style="display:flex; align-items:center; gap:10px;">
-        <div style="width:14px; height:14px; border-radius:3px; background:${colors[i]}; flex-shrink:0;"></div>
-        <div>
-          <div style="font-size:13px; font-weight:500; color:var(--white);">${lbl}</div>
-          <div style="font-size:12px; color:var(--muted);">${values[i]} holes &nbsp;·&nbsp; ${pct}%</div>
-        </div>
-      </div>`;
+    return `<div style="display:flex; align-items:center; gap:10px;">
+      <div style="width:14px; height:14px; border-radius:3px; background:${colors[i]}; flex-shrink:0;"></div>
+      <div>
+        <div style="font-size:13px; font-weight:500; color:var(--white);">${lbl}</div>
+        <div style="font-size:12px; color:var(--muted);">${values[i]} holes &nbsp;·&nbsp; ${pct}%</div>
+      </div>
+    </div>`;
   }).join('');
 }
 
-// ── Round Scorecards ─────────────────────────────────────────────────────────
+// ── Round Scorecards ──────────────────────────────────────────────────────────
 function renderScorecards(records) {
   const section = document.getElementById('scorecards-section');
   const body    = document.getElementById('scorecards-body');
+  const PAR_LOOKUP = { 1:4, 2:5, 3:4, 4:4, 5:3, 6:5, 7:4, 8:4, 9:3, 10:4, 11:5, 12:4, 13:3, 14:5, 15:4, 16:4, 17:3, 18:4 };
 
-  const PAR_LOOKUP = {
-    1:4, 2:5, 3:4, 4:4, 5:3, 6:5, 7:4, 8:4, 9:3,
-    10:4, 11:5, 12:4, 13:3, 14:5, 15:4, 16:4, 17:3, 18:4
-  };
-
-  // Only show weeks where we have hole data
   const weeksWithHoles = records.filter(r => r.holes && Object.keys(r.holes).length > 0);
   if (weeksWithHoles.length === 0) { section.style.display = 'none'; return; }
   section.style.display = 'block';
@@ -1531,7 +1428,6 @@ function renderScorecards(records) {
     if (diff === 2)  return 'sc-double';
     return 'sc-worse';
   }
-
   function diffLabel(diff) {
     if (diff <= -2) return '🦅 Eagle';
     if (diff === -1) return '🐦 Birdie';
@@ -1542,48 +1438,42 @@ function renderScorecards(records) {
   }
 
   body.innerHTML = weeksWithHoles.map(r => {
-    const holes = r.holes;
+    const holes    = r.holes;
     const holeNums = Object.keys(holes).map(Number).sort((a,b) => a-b);
-
     const holeCards = holeNums.map(h => {
       const par   = PAR_LOOKUP[h] || 4;
       const score = holes[h];
       const diff  = score - par;
       const cls   = scoreClass(diff);
       const lbl   = diffLabel(diff);
-
-      return `
-        <div class="scorecard-hole">
-          <div class="scorecard-hole-num">Hole ${h}</div>
-          <div class="scorecard-hole-par">Par ${par}</div>
-          <div class="scorecard-hole-score ${cls}">${score}</div>
-          <div class="scorecard-hole-diff ${cls}">${lbl}</div>
-        </div>`;
-    }).join('');
-
-    // Division badge for sub weeks
-    const divClass = 'div-' + (r.division || 'Black');
-
-    return `
-      <div class="scorecard-week">
-        <div class="scorecard-week-header">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span class="scorecard-week-label">${r.week}</span>
-            <span class="div-badge ${divClass}">${r.division}</span>
-          </div>
-          <div class="scorecard-week-totals">
-            <span>Gross <strong>${r.gross ?? '—'}</strong></span>
-            <span>Net <strong>${r.net ?? '—'}</strong></span>
-            <span>Hcp <strong>${r.handicap ?? '—'}</strong></span>
-          </div>
-        </div>
-        <div class="scorecard-grid">${holeCards}</div>
+      return `<div class="scorecard-hole">
+        <div class="scorecard-hole-num">Hole ${h}</div>
+        <div class="scorecard-hole-par">Par ${par}</div>
+        <div class="scorecard-hole-score ${cls}">${score}</div>
+        <div class="scorecard-hole-diff ${cls}">${lbl}</div>
       </div>`;
+    }).join('');
+    const divClass = 'div-' + (r.division || 'Black');
+    return `<div class="scorecard-week">
+      <div class="scorecard-week-header">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="scorecard-week-label">${r.week}</span>
+          <span class="div-badge ${divClass}">${r.division}</span>
+        </div>
+        <div class="scorecard-week-totals">
+          <span>Gross <strong>${r.gross ?? '—'}</strong></span>
+          <span>Net <strong>${r.net ?? '—'}</strong></span>
+          <span>Hcp <strong>${r.handicap ?? '—'}</strong></span>
+        </div>
+      </div>
+      <div class="scorecard-grid">${holeCards}</div>
+    </div>`;
   }).join('');
 }
 
 // ── Leaderboard ───────────────────────────────────────────────────────────────
 function renderLeaderboard() {
+  const allData = dataCache[currentSeason] || [];
   if (allData.length === 0) {
     document.getElementById('leaderboard-section').style.display = 'none';
     document.getElementById('lb-empty').style.display = 'block';
@@ -1592,45 +1482,30 @@ function renderLeaderboard() {
   document.getElementById('leaderboard-section').style.display = 'block';
   document.getElementById('lb-empty').style.display = 'none';
 
-  const divFilter   = document.getElementById('lb-division').value;
-  const sortBy      = document.getElementById('lb-sort').value;
-  const minRounds   = parseInt(document.getElementById('lb-min-rounds').value);
+  const divFilter = document.getElementById('lb-division').value;
+  const sortBy    = document.getElementById('lb-sort').value;
+  const minRounds = parseInt(document.getElementById('lb-min-rounds').value);
 
-  // Aggregate by player
   const playerMap = {};
   allData.forEach(r => {
+    // ── NEW: Banish the Ghosts! ──
+    if (r.player && r.player.toLowerCase().includes('ghost')) return;
+
     if (divFilter !== 'all' && r.division !== divFilter) return;
     const key = r.player;
     if (!playerMap[key]) {
-      playerMap[key] = {
-        name: r.player,
-        divisions: new Set(),
-        rounds: 0,
-        grossSum: 0, grossCount: 0,
-        netSum: 0,   netCount: 0,
+      playerMap[key] = { name: r.player, divisions: new Set(), rounds: 0,
+        grossSum: 0, grossCount: 0, netSum: 0, netCount: 0,
         bestNet: Infinity, worstNet: -Infinity,
-        bestGross: Infinity, worstGross: -Infinity,
-        nets: [],
-      };
+        bestGross: Infinity, worstGross: -Infinity };
     }
     const p = playerMap[key];
-    p.rounds++;
-    p.divisions.add(r.division);
-    const g = parseFloat(r.gross);
-    const n = parseFloat(r.net);
-    if (!isNaN(g)) {
-      p.grossSum += g; p.grossCount++;
-      p.bestGross  = Math.min(p.bestGross,  g);
-      p.worstGross = Math.max(p.worstGross, g);
-    }
-    if (!isNaN(n)) {
-      p.netSum += n; p.netCount++; p.nets.push(n);
-      p.bestNet  = Math.min(p.bestNet,  n);
-      p.worstNet = Math.max(p.worstNet, n);
-    }
+    p.rounds++; p.divisions.add(r.division);
+    const g = parseFloat(r.gross), n = parseFloat(r.net);
+    if (!isNaN(g)) { p.grossSum += g; p.grossCount++; p.bestGross = Math.min(p.bestGross, g); p.worstGross = Math.max(p.worstGross, g); }
+    if (!isNaN(n)) { p.netSum += n; p.netCount++; p.bestNet = Math.min(p.bestNet, n); p.worstNet = Math.max(p.worstNet, n); }
   });
 
-  // Build rows and filter by min rounds
   let rows = Object.values(playerMap)
     .filter(p => p.rounds >= minRounds)
     .map(p => ({
@@ -1644,7 +1519,6 @@ function renderLeaderboard() {
       divsStr:   [...p.divisions].join(', '),
     }));
 
-  // Sort
   rows.sort((a, b) => {
     if (sortBy === 'avg_net')    return (a.avgNet    ?? 999) - (b.avgNet    ?? 999);
     if (sortBy === 'avg_gross')  return (a.avgGross  ?? 999) - (b.avgGross  ?? 999);
@@ -1671,7 +1545,6 @@ function renderLeaderboard() {
       <td style="color:var(--green-score)">${p.bestNet ?? '—'}</td>
       <td style="color:var(--red-score)">${p.worstNet ?? '—'}</td>
     `;
-    tr.style.animation = `rowIn 0.3s ease both`;
     tbody.appendChild(tr);
   });
 
@@ -1679,22 +1552,13 @@ function renderLeaderboard() {
     tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:32px;color:var(--muted)">No players with ${minRounds}+ rounds in this division</td></tr>`;
   }
 
-  // Highlight the sorted column
-  // Column order: 1=#, 2=Player, 3=Division, 4=Rounds, 5=AvgGross, 6=BestGross, 7=WorstGross, 8=AvgNet, 9=BestNet, 10=WorstNet
   const sortColMap = { avg_gross: 5, best_gross: 6, avg_net: 8, best_net: 9 };
   const sortColIdx = sortColMap[sortBy] || 0;
   const lbTable = document.querySelector('.lb-table-wrap table');
   lbTable.querySelectorAll('th, td').forEach(el => el.classList.remove('sort-col'));
   if (sortColIdx) {
-    lbTable.querySelectorAll(`th:nth-child(${sortColIdx}), td:nth-child(${sortColIdx})`)
-      .forEach(el => el.classList.add('sort-col'));
+    lbTable.querySelectorAll(`th:nth-child(${sortColIdx}), td:nth-child(${sortColIdx})`).forEach(el => el.classList.add('sort-col'));
   }
-}
-
-function stddev(arr) {
-  if (!arr || arr.length < 2) return null;
-  const m = arr.reduce((a,b)=>a+b,0)/arr.length;
-  return Math.sqrt(arr.reduce((s,v)=>s+Math.pow(v-m,2),0)/arr.length);
 }
 
 // ── Status ────────────────────────────────────────────────────────────────────
@@ -1706,7 +1570,6 @@ function showStatus(type, msg) {
     ? msg
     : `<div style="width:12px;height:12px;border:2px solid rgba(201,168,76,0.3);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0"></div> ${msg}`;
 }
-
 </script>
 </body>
 </html>
